@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_24.html -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>다이홀릭 주문서</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="./index_files/css2" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F6F4F0;
+    --card: #FFFFFF;
+    --text: #1B1B1B;
+    --text-sub: #7A7A7A;
+    --text-hint: #A8A8A8;
+    --accent: #1B1B1B;
+    --accent-light: #F0F0EE;
+    --danger: #EF4444;
+    --danger-light: #FEF2F2;
+    --border: #EBEBEB;
+    --input-bg: #F9F9F8;
+    --radius: 14px;
+    --radius-sm: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+    --shadow-lg: 0 4px 24px rgba(0,0,0,0.06);
+    --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', 'Plus Jakarta Sans', -apple-system, sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Subtle grain texture */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page-wrapper {
+    position: relative;
+    z-index: 1;
+    padding: 24px 16px 60px;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  /* ─── Header ─── */
+  .header {
+    text-align: center;
+    padding: 32px 0 36px;
+    animation: fadeDown 0.6s ease-out;
+  }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--text);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .header-badge .dot {
+    width: 6px; height: 6px;
+    background: #4ADE80;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .header h1 {
+    font-family: 'Plus Jakarta Sans', 'Noto Sans KR', sans-serif;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .header p {
+    font-size: 14px;
+    color: var(--text-sub);
+    font-weight: 400;
+  }
+
+  /* ─── Cards ─── */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+    animation: fadeUp 0.5s ease-out both;
+    border: 1px solid rgba(0,0,0,0.03);
+  }
+
+  .card:nth-child(1) { animation-delay: 0.05s; }
+  .card:nth-child(2) { animation-delay: 0.1s; }
+  .card:nth-child(3) { animation-delay: 0.15s; }
+  .card:nth-child(4) { animation-delay: 0.2s; }
+  .card:nth-child(5) { animation-delay: 0.25s; }
+  .card:nth-child(6) { animation-delay: 0.3s; }
+  .card:nth-child(7) { animation-delay: 0.35s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-sub);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .card-title .title-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px; height: 28px;
+    background: var(--accent-light);
+    border-radius: 8px;
+    font-size: 14px;
+  }
+
+  .card-title .required-dot {
+    width: 5px; height: 5px;
+    background: var(--danger);
+    border-radius: 50%;
+    margin-left: -4px;
+  }
+
+  /* ─── Form ─── */
+  .form-group { margin-bottom: 18px; }
+  .form-group:last-child { margin-bottom: 0; }
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  label .required { color: var(--danger); font-size: 12px; }
+
+  .hint {
+    font-size: 12px;
+    color: var(--text-hint);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  input[type="text"],
+  input[type="tel"],
+  input[type="number"] {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text);
+    background: var(--input-bg);
+    transition: all var(--transition);
+    outline: none;
+    -webkit-appearance: none;
+  }
+
+  input:focus {
+    border-color: var(--text);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+  }
+
+  input::placeholder { color: #C4C4C4; }
+
+  .error-msg {
+    display: none;
+    font-size: 12px;
+    color: var(--danger);
+    margin-top: 6px;
+    font-weight: 500;
+    padding-left: 2px;
+  }
+
+  /* ─── Address ─── */
+  .address-row { display: flex; gap: 8px; margin-bottom: 8px; }
+  .address-row input { flex: 1; }
+
+  .btn-address {
+    white-space: nowrap;
+    padding: 13px 18px;
+    background: var(--text);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    transition: all var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .btn-address:hover { background: #333; transform: translateY(-1px); }
+  .btn-address:active { transform: translateY(0); }
+
+  /* ─── Pay Options ─── */
+  .pay-options { display: flex; gap: 10px; }
+
+  .pay-option {
+    flex: 1;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-sub);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pay-option > * { position: relative; z-index: 1; }
+
+  .pay-option.selected {
+    border-color: #D0D0D0;
+    background: #F0F0EE;
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .pay-option .icon {
+    margin-bottom: 8px;
+    color: var(--text-hint);
+    transition: color var(--transition);
+  }
+
+  .pay-option.selected .icon { color: var(--text); }
+
+  .pay-option:not(.selected):hover {
+    border-color: #D0D0D0;
+    background: #FAFAFA;
+    transform: translateY(-1px);
+  }
+
+  /* ─── Bank Info ─── */
+  .bank-info {
+    background: linear-gradient(135deg, #F5F5F0 0%, #EFEFEB 100%);
+    border-radius: 14px;
+    padding: 22px;
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .bank-info p {
+    font-size: 14px;
+    color: #444;
+    line-height: 2;
+  }
+
+  .bank-info strong { color: var(--text); font-weight: 700; }
+
+  .bank-info .warn-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(239,68,68,0.08);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--danger);
+    font-weight: 600;
+    margin-top: 8px;
+  }
+
+  /* ─── Card Guide ─── */
+  .card-guide {
+    background: linear-gradient(135deg, #F5F5F0 0%, #EFEFEB 100%);
+    border-radius: 14px;
+    padding: 28px 22px;
+    text-align: center;
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+
+  .card-guide .card-guide-icon {
+    font-size: 36px;
+    margin-bottom: 10px;
+  }
+
+  .card-guide p {
+    font-size: 14px;
+    color: #555;
+    line-height: 1.8;
+    font-weight: 500;
+  }
+
+  /* ─── Receipt Options ─── */
+  .receipt-options {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .receipt-option {
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 12px 6px;
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-sub);
+    white-space: nowrap;
+  }
+
+  .receipt-option.selected {
+    border-color: #D0D0D0;
+    background: #F0F0EE;
+    color: var(--text);
+    font-weight: 700;
+  }
+
+  .receipt-option:not(.selected):hover {
+    border-color: #D0D0D0;
+    background: #FAFAFA;
+  }
+
+  .receipt-detail {
+    margin-top: 14px;
+    display: none;
+  }
+
+  .receipt-detail.show { display: block; }
+
+  /* ─── Amount Display ─── */
+  .amount-display {
+    background: linear-gradient(135deg, var(--accent-light), #EFEFEB);
+    border-radius: var(--radius-sm);
+    padding: 18px;
+    margin-top: 10px;
+    border: 1px solid rgba(0,0,0,0.03);
+  }
+
+  .amount-display .label {
+    font-size: 11px;
+    color: var(--text-sub);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .amount-display .value {
+    font-family: 'Plus Jakarta Sans', 'Noto Sans KR', sans-serif;
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+
+  /* ─── Privacy ─── */
+  .privacy-box {
+    background: #F9F9F8;
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    margin-bottom: 14px;
+    border: 1px solid var(--border);
+  }
+
+  .privacy-row { margin-bottom: 14px; }
+  .privacy-row:last-child { margin-bottom: 0; }
+
+  .privacy-label {
+    font-size: 11px;
+    color: var(--text-hint);
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .privacy-value {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+
+  .privacy-hint {
+    font-size: 12px;
+    color: var(--text-hint);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .privacy-check {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-sub);
+    transition: all var(--transition);
+    user-select: none;
+  }
+
+  .privacy-check:hover { border-color: #D0D0D0; }
+
+  .privacy-check.agreed {
+    border-color: #D0D0D0;
+    background: #F0F0EE;
+    color: var(--text);
+  }
+
+  .check-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 8px;
+    border: 2px solid #D0D0D0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    color: transparent;
+    flex-shrink: 0;
+    transition: all var(--transition);
+  }
+
+  .privacy-check.agreed .check-icon {
+    background: var(--text);
+    border-color: var(--text);
+    color: #fff;
+    font-weight: 700;
+  }
+
+  /* ─── Submit Button ─── */
+  .submit-btn {
+    width: 100%;
+    padding: 18px;
+    background: var(--text);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-size: 16px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    transition: all var(--transition);
+    margin-top: 10px;
+    position: relative;
+    overflow: hidden;
+    letter-spacing: -0.3px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    animation: fadeUp 0.5s ease-out 0.4s both;
+  }
+
+  .submit-btn::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transition: left 0.5s;
+  }
+
+  .submit-btn:hover::after { left: 100%; }
+  .submit-btn:hover { background: #333; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,0,0,0.2); }
+  .submit-btn:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+  .submit-btn:disabled { background: #C4C4C4; cursor: not-allowed; box-shadow: none; }
+
+  /* ─── Success Box ─── */
+  .success-box {
+    display: none;
+    text-align: center;
+    padding: 56px 28px;
+    background: var(--card);
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    animation: scaleIn 0.4s ease-out;
+    border: 1px solid rgba(0,0,0,0.03);
+  }
+
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .success-box .icon {
+    width: 72px; height: 72px;
+    background: linear-gradient(135deg, #4ADE80, #22C55E);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 32px;
+    color: #fff;
+    box-shadow: 0 8px 24px rgba(74,222,128,0.3);
+  }
+
+  .success-box h2 {
+    font-size: 22px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+
+  .success-box p { font-size: 14px; color: var(--text-sub); line-height: 1.7; }
+
+  /* ─── Email Domain Select ─── */
+  select {
+    width: 100%;
+    padding: 13px 36px 13px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--input-bg);
+    color: var(--text);
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+
+  select:focus {
+    border-color: var(--text);
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+  }
+
+  /* ─── Footer ─── */
+  .footer {
+    text-align: center;
+    padding: 28px 0 8px;
+    animation: fadeUp 0.5s ease-out 0.5s both;
+  }
+
+  .footer p {
+    font-size: 12px;
+    color: var(--text-hint);
+    line-height: 1.6;
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 420px) {
+    .receipt-options {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .header h1 { font-size: 28px; }
+  }
+
+
+</style>
+<script src="./index_files/postcode.v2.js.다운로드"></script>
+</head>
+<body>
+
+<div class="page-wrapper">
+  <div class="header">
+    <div class="header-badge">
+      <span class="dot"></span>
+      주문 접수 중
+    </div>
+    <h1>다이홀릭 주문서</h1>
+    <p>아래 정보를 정확히 입력해 주세요</p>
+  </div>
+
+  <div id="formArea">
+
+    <!-- 결제 방법 -->
+    <div class="card">
+      <div class="card-title">
+        <span class="title-icon">💳</span>
+        결제 방법
+      </div>
+      <div class="pay-options">
+        <div class="pay-option selected" id="pay_transfer" onclick="selectPay(&#39;transfer&#39;)">
+          <div class="icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <rect x="4" y="8" width="24" height="16" rx="4" fill="currentColor" opacity="0.15"></rect>
+              <rect x="4" y="8" width="24" height="16" rx="4" stroke="currentColor" stroke-width="2"></rect>
+              <circle cx="12" cy="16" r="3" fill="currentColor"></circle>
+              <line x1="18" y1="14" x2="24" y2="14" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+              <line x1="18" y1="18" x2="22" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></line>
+              <path d="M16 4 L16 8 M13 5.5 L16 4 L19 5.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+          계좌이체
+        </div>
+        <div class="pay-option" id="pay_card" onclick="selectPay(&#39;card&#39;)">
+          <div class="icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <rect x="3" y="7" width="26" height="18" rx="4" fill="currentColor" opacity="0.15"></rect>
+              <rect x="3" y="7" width="26" height="18" rx="4" stroke="currentColor" stroke-width="2"></rect>
+              <rect x="3" y="12" width="26" height="4" fill="currentColor" opacity="0.3"></rect>
+              <rect x="7" y="20" width="6" height="2" rx="1" fill="currentColor"></rect>
+              <rect x="15" y="20" width="4" height="2" rx="1" fill="currentColor"></rect>
+            </svg>
+          </div>
+          카드결제
+        </div>
+      </div>
+
+      <!-- 계좌이체 입금 안내 -->
+      <div id="bankInfo" style="margin-top:16px;">
+        <div class="bank-info">
+          <p>
+            은행: <strong>IBK 기업은행</strong><br>
+            계좌번호: <strong>519-075718-04-018</strong><br>
+            예금주: <strong>주식회사 리유니티</strong>
+          </p>
+          <div class="warn-line">⚠️ 주문자명과 동일한 이름으로 입금해 주세요</div>
+        </div>
+      </div>
+
+      <!-- 카드결제 안내 -->
+      <div id="cardInfo" style="margin-top:16px; display:none;">
+        <div class="card-guide">
+          <div class="card-guide-icon">💳</div>
+          <p>주문서 작성 완료 후<br>카드 결제 페이지로 자동 이동됩니다.<br><span style="font-size:13px;color:#A8A8A8;">( 2초 후 자동 이동 )</span></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 주문자 정보 -->
+    <div class="card">
+      <div class="card-title">
+        <span class="title-icon">👤</span>
+        주문자 정보
+      </div>
+
+      <div class="form-group">
+        <label id="nameLabel">주문자명(입금자명) <span class="required">*</span></label>
+        <input type="text" id="name" placeholder="이름을 입력해 주세요">
+        <div class="hint" id="nameHint">꼭 입금자명을 적어주세요. 입금 확인 시 필요합니다.</div>
+        <div class="error-msg" id="nameErr">이름을 입력해 주세요</div>
+      </div>
+
+      <div class="form-group">
+        <label>연락처 <span class="required">*</span></label>
+        <input type="tel" id="phone" placeholder="010-0000-0000">
+        <div class="error-msg" id="phoneErr">연락처를 입력해 주세요</div>
+      </div>
+    </div>
+
+    <!-- 배송지 -->
+    <div class="card">
+      <div class="card-title">
+        <span class="title-icon">📦</span>
+        배송지
+      </div>
+      <div class="form-group">
+        <label>주소 <span class="required">*</span></label>
+        <div class="address-row">
+          <input type="text" id="postcode" placeholder="우편번호" readonly="">
+          <button class="btn-address" onclick="searchAddress()">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="white" stroke-width="1.8"></circle><path d="M10.5 10.5L14 14" stroke="white" stroke-width="1.8" stroke-linecap="round"></path></svg>
+            주소 검색
+          </button>
+        </div>
+        <input type="text" id="address1" placeholder="기본 주소" readonly="" style="margin-bottom:8px">
+        <input type="text" id="address2" placeholder="상세 주소 입력 (동/호수 등)">
+        <div class="error-msg" id="addressErr">주소를 검색해 주세요</div>
+      </div>
+    </div>
+
+    <!-- 주문 상품 -->
+    <div class="card">
+      <div class="card-title">
+        <span class="title-icon">🛒</span>
+        주문 상품
+      </div>
+
+      <div class="form-group">
+        <label>품목명 <span class="required">*</span></label>
+        <input type="text" id="product" placeholder="구매하실 상품명을 입력해 주세요">
+        <div class="error-msg" id="productErr">품목명을 입력해 주세요</div>
+      </div>
+
+      <div class="form-group">
+        <label>수량 <span class="required">*</span></label>
+        <input type="number" id="quantity" placeholder="수량 입력" min="1" inputmode="numeric" pattern="[0-9]*">
+        <div class="error-msg" id="quantityErr">수량을 입력해 주세요</div>
+      </div>
+
+      <div class="form-group">
+        <label id="amountLabel">입금 금액 <span class="required">*</span></label>
+        <input type="number" id="amount" placeholder="입금하실 금액 입력" inputmode="numeric" pattern="[0-9]*" oninput="updateAmount()">
+        <div class="hint" id="amountHint">택배비를 포함한 총 금액을 입력해 주세요.</div>
+        <div class="error-msg" id="amountErr">금액을 입력해 주세요</div>
+        <div class="amount-display" id="amountDisplay" style="display:none">
+          <div class="label" id="amountDisplayLabel">입금 금액</div>
+          <div class="value" id="amountValue"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 세금계산서 / 현금영수증 -->
+    <div class="card" id="receiptCard">
+      <div class="card-title">
+        <span class="title-icon">🧾</span>
+        세금계산서 / 현금영수증
+      </div>
+      <div class="form-group">
+        <label>발행 유형 선택</label>
+        <div class="receipt-options">
+          <div class="receipt-option selected" id="rec_none" onclick="selectReceipt(&#39;none&#39;)">해당없음</div>
+          <div class="receipt-option" id="rec_cash" onclick="selectReceipt(&#39;cash&#39;)">현금영수증</div>
+          <div class="receipt-option" id="rec_expense" onclick="selectReceipt(&#39;expense&#39;)">지출증빙</div>
+          <div class="receipt-option" id="rec_tax" onclick="selectReceipt(&#39;tax&#39;)">계산서</div>
+        </div>
+
+        <div class="receipt-detail" id="receiptDetail" style="display:none; margin-top:14px;">
+          <input type="tel" id="receiptNumber" placeholder="휴대전화 번호를 입력해 주세요 (숫자만)" maxlength="11" inputmode="numeric" pattern="[0-9]*" oninput="this.value=this.value.replace(/[^0-9]/g,&#39;&#39;)">
+        </div>
+        <div class="receipt-detail" id="expenseDetail" style="display:none; margin-top:14px;">
+          <input type="tel" id="expenseNumber" placeholder="사업자등록번호 10자리 입력 (숫자만)" maxlength="10" inputmode="numeric" pattern="[0-9]*" oninput="this.value=this.value.replace(/[^0-9]/g,&#39;&#39;)">
+        </div>
+        <div class="receipt-detail" id="taxDetail" style="display:none; margin-top:14px;">
+          <input type="text" id="bizName" placeholder="사업자명 입력" style="margin-bottom:8px;">
+          <input type="tel" id="bizNumber" placeholder="사업자번호 10자리 입력 (숫자만)" maxlength="10" inputmode="numeric" pattern="[0-9]*" oninput="this.value=this.value.replace(/[^0-9]/g,&#39;&#39;)" style="margin-bottom:8px;">
+          <div style="margin-bottom:8px;">
+            <div style="display:flex; gap:6px; align-items:center;">
+              <input type="text" id="bizEmailId" placeholder="이메일" style="flex:1; margin-bottom:0;">
+              <span style="font-size:16px; color:var(--text-hint); flex-shrink:0;">@</span>
+              <div style="flex:1; position:relative;">
+                <select id="bizEmailDomain" onchange="toggleEmailDirect()">
+                  <option value="direct">직접 입력</option>
+                  <option value="naver.com">naver.com</option>
+                  <option value="gmail.com">gmail.com</option>
+                  <option value="daum.net">daum.net</option>
+                  <option value="kakao.com">kakao.com</option>
+                  <option value="nate.com">nate.com</option>
+                  <option value="hanmail.net">hanmail.net</option>
+                </select>
+                <div style="pointer-events:none; position:absolute; right:12px; top:50%; transform:translateY(-50%); color:var(--text-hint);">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </div>
+              </div>
+            </div>
+            <input type="text" id="bizEmailDomainDirect" placeholder="도메인 직접 입력 (예: company.com)" style="display:block; margin-top:8px;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 개인정보 수집 동의 -->
+    <div class="card">
+      <div class="card-title">
+        <span class="title-icon">🔒</span>
+        개인정보 수집 동의
+        <span class="required-dot"></span>
+      </div>
+      <div class="privacy-box">
+        <div class="privacy-row">
+          <div class="privacy-label">수집하는 개인정보 항목</div>
+          <div class="privacy-value">이름, 연락처, 주소, 사업자정보</div>
+        </div>
+        <div class="privacy-row">
+          <div class="privacy-label">수집 및 이용 목적</div>
+          <div class="privacy-value">상품 주문 확인 및 배송 및 계산서 발행을 위한 사업자 정보</div>
+        </div>
+        <div class="privacy-row">
+          <div class="privacy-label">보유 및 이용기간</div>
+          <div class="privacy-value" style="color: var(--danger); font-weight: 600;">상품 배송 후 1개월</div>
+        </div>
+      </div>
+      <div class="privacy-hint">동의를 거부하실 수 있으나 주문 참여가 불가능합니다.</div>
+      <div class="privacy-check" id="privacyCheck" onclick="togglePrivacy()">
+        <div class="check-icon" id="checkIcon">✓</div>
+        개인정보 수집 및 이용에 동의합니다.
+      </div>
+      <div class="error-msg" id="privacyErr">개인정보 수집 및 이용에 동의해 주세요</div>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitOrder()">주문 완료하기</button>
+  </div>
+
+  <!-- 완료 화면 -->
+  <div class="success-box" id="successBox">
+    <div class="icon">✓</div>
+    <h2>주문이 접수되었습니다!</h2>
+    <p id="successMsg">확인 후 빠르게 발송해 드릴게요.<br><br>감사합니다 😊</p>
+  </div>
+
+  <div class="footer">
+    <p>다이홀릭 · 주식회사 리유니티</p>
+  </div>
+</div>
+
+<script>
+var WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx-Iv606KQBIXLHVX0hUpak2Opx7yP3AJWjk7TvBETH2tAOTaDm3N6cA8Ok2IarQjSfmw/exec";
+var privacyAgreed = false;
+var selectedPay = 'transfer';
+var selectedReceipt = 'none';
+
+function togglePrivacy() {
+  privacyAgreed = !privacyAgreed;
+  var el = document.getElementById('privacyCheck');
+  if (privacyAgreed) { el.classList.add('agreed'); }
+  else { el.classList.remove('agreed'); }
+}
+
+function toggleEmailDirect() {
+  var val = document.getElementById('bizEmailDomain').value;
+  document.getElementById('bizEmailDomainDirect').style.display = (val === 'direct') ? 'block' : 'none';
+}
+
+function getBizEmail() {
+  var id = document.getElementById('bizEmailId').value.trim();
+  if (!id) return '';
+  var sel = document.getElementById('bizEmailDomain').value;
+  var domain = (sel === 'direct') ? document.getElementById('bizEmailDomainDirect').value.trim() : sel;
+  return id + '@' + domain;
+}
+
+function selectPay(type) {
+  selectedPay = type;
+  document.querySelectorAll('.pay-option').forEach(function(el){ el.classList.remove('selected'); });
+  document.getElementById('pay_' + type).classList.add('selected');
+  if (type === 'card') {
+    document.getElementById('receiptCard').style.display = 'none';
+    document.getElementById('bankInfo').style.display = 'none';
+    document.getElementById('cardInfo').style.display = 'block';
+    selectReceipt('none');
+    document.getElementById('nameLabel').innerHTML = '주문자명 <span class="required">*</span>';
+    document.getElementById('nameHint').textContent = '주문자 성함을 입력해 주세요.';
+    document.getElementById('amountLabel').innerHTML = '카드 결제 금액 <span class="required">*</span>';
+    document.getElementById('amountDisplayLabel').textContent = '카드 결제 금액';
+    document.getElementById('amount').placeholder = '결제하실 금액 입력';
+    document.getElementById('amountHint').textContent = '택배비를 포함한 총 결제금액을 입력해 주세요.';
+    document.getElementById('submitBtn').textContent = '카드 결제 진행';
+  } else {
+    document.getElementById('receiptCard').style.display = 'block';
+    document.getElementById('bankInfo').style.display = 'block';
+    document.getElementById('cardInfo').style.display = 'none';
+    document.getElementById('nameLabel').innerHTML = '주문자명(입금자명) <span class="required">*</span>';
+    document.getElementById('nameHint').textContent = '꼭 입금자명을 적어주세요. 입금 확인 시 필요합니다.';
+    document.getElementById('amountLabel').innerHTML = '입금 금액 <span class="required">*</span>';
+    document.getElementById('amountDisplayLabel').textContent = '입금 금액';
+    document.getElementById('amount').placeholder = '입금하실 금액 입력';
+    document.getElementById('amountHint').textContent = '택배비를 포함한 총 금액을 입력해 주세요.';
+    document.getElementById('submitBtn').textContent = '주문 완료하기';
+  }
+}
+
+function selectReceipt(type) {
+  selectedReceipt = type;
+  document.querySelectorAll('.receipt-option').forEach(function(el){ el.classList.remove('selected'); });
+  document.getElementById('rec_' + type).classList.add('selected');
+  var detail = document.getElementById('receiptDetail');
+  var expenseDetail = document.getElementById('expenseDetail');
+  var taxDetail = document.getElementById('taxDetail');
+  detail.style.display = 'none';
+  expenseDetail.style.display = 'none';
+  taxDetail.style.display = 'none';
+  if (type === 'cash') {
+    detail.style.display = 'block';
+  } else if (type === 'expense') {
+    expenseDetail.style.display = 'block';
+  } else if (type === 'tax') {
+    taxDetail.style.display = 'block';
+  }
+}
+
+function searchAddress() {
+  function openPostcode() {
+    new daum.Postcode({
+      oncomplete: function(data) {
+        document.getElementById('postcode').value = data.zonecode;
+        document.getElementById('address1').value = data.roadAddress || data.jibunAddress;
+        document.getElementById('address2').value = '';
+        document.getElementById('address2').focus();
+      }
+    }).open();
+  }
+
+  if (typeof daum !== 'undefined' && daum.Postcode) {
+    openPostcode();
+  } else {
+    var script = document.createElement('script');
+    script.src = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js';
+    script.onload = openPostcode;
+    document.head.appendChild(script);
+  }
+}
+
+
+
+function updateAmount() {
+  var val = document.getElementById('amount').value;
+  var disp = document.getElementById('amountDisplay');
+  var valEl = document.getElementById('amountValue');
+  if (val && parseInt(val) > 0) {
+    disp.style.display = 'block';
+    valEl.textContent = parseInt(val).toLocaleString('ko-KR') + '원';
+  } else {
+    disp.style.display = 'none';
+  }
+}
+
+function showError(id, show) {
+  document.getElementById(id).style.display = show ? 'block' : 'none';
+}
+
+function showSuccess() {
+  document.getElementById('formArea').style.display = 'none';
+  document.getElementById('successBox').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (selectedPay === 'card') {
+    document.getElementById('successMsg').innerHTML = '잠시 후 카드 결제 페이지로 이동합니다...<br><span id="countdown" style="font-family:Plus Jakarta Sans,sans-serif;font-size:42px;font-weight:800;color:#1B1B1B;line-height:2;">2</span>';
+    var count = 2;
+    var timer = setInterval(function() {
+      count--;
+      var el = document.getElementById('countdown');
+      if (el) el.textContent = count;
+      if (count <= 0) {
+        clearInterval(timer);
+        window.open('https://www.payapp.kr/L/z47911', '_blank');
+      }
+    }, 1000);
+  } else {
+    var name = document.getElementById('name').value.trim();
+    var amount = document.getElementById('amount').value.trim();
+    var amountFormatted = parseInt(amount).toLocaleString('ko-KR');
+    document.getElementById('successMsg').innerHTML =
+      '<div style="background:#F9F9F8; border-radius:16px; padding:24px; text-align:left; margin-top:16px; border:1px solid #EBEBEB;">' +
+        '<div style="font-size:11px; color:#A8A8A8; margin-bottom:4px; font-weight:600; letter-spacing:0.3px; text-transform:uppercase;">입금자명</div>' +
+        '<div style="font-size:18px; font-weight:700; color:#1B1B1B; margin-bottom:18px;">' + name + '</div>' +
+        '<div style="font-size:11px; color:#A8A8A8; margin-bottom:4px; font-weight:600; letter-spacing:0.3px; text-transform:uppercase;">입금 금액</div>' +
+        '<div style="font-family:Plus Jakarta Sans,Noto Sans KR,sans-serif; font-size:28px; font-weight:800; color:#1B1B1B; margin-bottom:18px; letter-spacing:-0.5px;">' + amountFormatted + '원</div>' +
+        '<div style="font-size:11px; color:#A8A8A8; margin-bottom:4px; font-weight:600; letter-spacing:0.3px; text-transform:uppercase;">입금 계좌</div>' +
+        '<div style="font-size:16px; font-weight:700; color:#1B1B1B; margin-bottom:2px;">IBK 기업은행</div>' +
+        '<div style="font-family:Plus Jakarta Sans,sans-serif; font-size:16px; font-weight:700; color:#1B1B1B; margin-bottom:4px; letter-spacing:0.5px;">519-075718-04-018</div>' +
+        '<div style="font-size:13px; color:#7A7A7A;">예금주: 주식회사 리유니티</div>' +
+      '</div>' +
+      '<div style="margin-top:16px; display:inline-flex; align-items:center; gap:6px; background:#FEF2F2; padding:8px 14px; border-radius:8px; font-size:13px; color:#EF4444; font-weight:600;">⚠️ 입금자명을 꼭 확인해 주세요!</div>' +
+      '<div style="margin-top:10px; font-size:13px; color:#7A7A7A;">입금 확인 후 빠르게 발송해 드릴게요 😊</div>';
+  }
+}
+
+function submitOrder() {
+  var name = document.getElementById('name').value.trim();
+  var phone = document.getElementById('phone').value.trim();
+  var postcode = document.getElementById('postcode').value.trim();
+  var address1 = document.getElementById('address1').value.trim();
+  var address2 = document.getElementById('address2').value.trim();
+  var product = document.getElementById('product').value.trim();
+  var quantity = document.getElementById('quantity').value.trim();
+  var amount = document.getElementById('amount').value.trim();
+
+  var valid = true;
+  showError('nameErr', !name); if (!name) valid = false;
+  showError('phoneErr', !phone); if (!phone) valid = false;
+  showError('addressErr', !postcode); if (!postcode) valid = false;
+  showError('productErr', !product); if (!product) valid = false;
+  showError('quantityErr', !quantity); if (!quantity) valid = false;
+  showError('amountErr', !amount); if (!amount) valid = false;
+  showError('privacyErr', !privacyAgreed); if (!privacyAgreed) valid = false;
+  if (!valid) return;
+
+  // 현금결제(계좌이체) 시 입금자명 확인 팝업
+  if (selectedPay === 'transfer') {
+    var amountFormatted = parseInt(amount).toLocaleString('ko-KR');
+    var confirmed = confirm('입금자명과 금액을 확인해 주세요!\n\n입금자명: ' + name + '\n입금 금액: ' + amountFormatted + '원\n\n맞으면 [확인], 다시 입력하려면 [취소]를 눌러주세요.');
+    if (!confirmed) return;
+  }
+
+  if (selectedReceipt === 'tax') {
+    var bizNum = document.getElementById('bizNumber').value.trim();
+    if (!bizNum) { alert('계산서 발행을 위해 사업자번호를 입력해 주세요.'); return; }
+    if (bizNum.length !== 10) { alert('사업자번호 10자리를 정확히 입력해 주세요.'); return; }
+  }
+  if (selectedReceipt === 'expense') {
+    var expNum = document.getElementById('expenseNumber').value.trim();
+    if (expNum.length !== 10) { alert('사업자등록번호 10자리를 정확히 입력해 주세요.'); return; }
+  }
+
+  var btn = document.querySelector('.submit-btn');
+  btn.disabled = true;
+  btn.textContent = '전송 중...';
+
+  var payload = {
+    type: "order",
+    payMethod: selectedPay === 'transfer' ? '계좌이체' : '카드결제',
+    name: name, phone: phone,
+    address: address1 + (address2 ? ' ' + address2 : '') + ' (' + postcode + ')',
+    product: product, quantity: quantity, amount: amount,
+    receiptType: selectedReceipt === 'none' ? '해당없음' : selectedReceipt === 'cash' ? '현금영수증' : selectedReceipt === 'expense' ? '사업자지출증빙' : '계산서발행',
+    receiptNumber: selectedReceipt === 'cash' ? document.getElementById('receiptNumber').value.trim() : selectedReceipt === 'expense' ? document.getElementById('expenseNumber').value.trim() : '',
+    bizName: document.getElementById('bizName').value.trim(),
+    bizNumber: document.getElementById('bizNumber').value.trim(),
+    bizEmail: getBizEmail(),
+    submittedAt: new Date().toLocaleString('ko-KR')
+  };
+
+  fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payload) })
+    .then(function() { showSuccess(); })
+    .catch(function() { showSuccess(); });
+}
+</script>
+
+
+
+</body></html>
