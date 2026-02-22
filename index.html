@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_64.html -->
+<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_65.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -775,6 +775,7 @@
         <input type="number" id="amount" placeholder="결제하실 금액 입력" inputmode="numeric" pattern="[0-9]*" oninput="updateAmount()">
         <div class="hint" id="amountHint">택배비를 포함한 총 결제금액을 입력해 주세요.</div>
         <div class="error-msg" id="amountErr">금액을 입력해 주세요</div>
+        <div class="error-msg" id="amountMinErr">카드 결제 최소 금액은 1,000원입니다</div>
         <div class="amount-display" id="amountDisplay" style="display:none">
           <div class="label" id="amountDisplayLabel">카드 결제 금액</div>
           <div class="value" id="amountValue"></div>
@@ -1042,6 +1043,11 @@ function submitOrder() {
   showError('productErr', !product); if (!product) valid = false;
   showError('quantityErr', !quantity); if (!quantity) valid = false;
   showError('amountErr', !amount); if (!amount) valid = false;
+  // 카드결제 시 최소 1000원 체크
+  var amountNum = parseInt(amount) || 0;
+  var isBelowMin = selectedPay === 'card' && amount && amountNum < 1000;
+  showError('amountMinErr', isBelowMin);
+  if (isBelowMin) valid = false;
   showError('privacyErr', !privacyAgreed); if (!privacyAgreed) valid = false;
   if (!valid) return;
 
