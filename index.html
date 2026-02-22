@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_65.html -->
+<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_66.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -784,7 +784,7 @@
     </div>
 
     <!-- 세금계산서 / 현금영수증 -->
-    <div class="card" id="receiptCard" style="display: none;">
+    <div class="card" id="receiptCard">
       <div class="card-title">
         <span class="title-icon">🧾</span>
         세금계산서 / 현금영수증
@@ -1128,7 +1128,7 @@ function submitOrder() {
       goodname: cardProduct || '주문상품',
       price: cardAmount,
       recvphone: cardPhone,
-      memo: cardName + ' 주문'
+      memo: cardName
     };
     // 화면 먼저 전환
     showSuccess();
