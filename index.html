@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_32.html -->
+<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_35.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1030,11 +1030,23 @@ function submitOrder() {
   };
 
   if (selectedPay === 'card') {
-    showSuccess(); // 화면 먼저 전환
+    // 카드결제 확인 팝업
+    var amountFormatted = parseInt(amount).toLocaleString('ko-KR');
+    var address1 = document.getElementById('address1').value.trim();
+    var address2 = document.getElementById('address2').value.trim();
+    var postcode = document.getElementById('postcode').value.trim();
+    var fullAddress = address1 + (address2 ? ' ' + address2 : '') + (postcode ? ' (' + postcode + ')' : '');
+    var confirmed = confirm('주문자명과 결제 금액을 확인해 주세요!\n\n주문자명: ' + name + '\n결제 금액: ' + amountFormatted + '원\n연락처: ' + (phone || '미입력') + '\n주소: ' + (fullAddress || '미입력') + '\n\n맞으면 [확인], 다시 입력하려면 [취소]를 눌러주세요.');
+    if (!confirmed) {
+      btn.disabled = false;
+      btn.textContent = '카드 결제 진행';
+      return;
+    }
     var cardName = name;
     var cardPhone = phone;
     var cardProduct = product;
     var cardAmount = parseInt(amount);
+    // Apps Script에 결제요청 → 페이앱 URL 받아서 이동
     var payRequestData = {
       type: 'payrequest',
       goodname: cardProduct || '주문상품',
@@ -1042,13 +1054,17 @@ function submitOrder() {
       recvphone: cardPhone,
       memo: cardName + ' 주문'
     };
-    // 주문서 저장과 결제 URL 요청을 동시에
-    Promise.all([
-      fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payload) }).catch(function(){}),
-      fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payRequestData) }).then(function(res){ return res.json(); })
-    ])
-    .then(function(results) {
-      var data = results[1];
+    // 주문서도 동시에 저장
+    fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payload) })
+      .then(function() {})
+      .catch(function() {});
+    // 페이앱 결제 URL 요청
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      body: JSON.stringify(payRequestData)
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
       if (data.success && data.payUrl) {
         window.location.href = data.payUrl;
       } else {
