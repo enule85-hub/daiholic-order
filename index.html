@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_57.html -->
+<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_60.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -650,7 +650,7 @@
         결제 방법
       </div>
       <div class="pay-options">
-        <div class="pay-option selected" id="pay_transfer" onclick="selectPay(&#39;transfer&#39;)">
+        <div class="pay-option" id="pay_transfer" onclick="selectPay(&#39;transfer&#39;)">
           <div class="icon">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
               <rect x="4" y="8" width="24" height="16" rx="4" fill="currentColor" opacity="0.15"></rect>
@@ -663,7 +663,7 @@
           </div>
           계좌이체
         </div>
-        <div class="pay-option" id="pay_card" onclick="selectPay(&#39;card&#39;)">
+        <div class="pay-option selected" id="pay_card" onclick="selectPay(&#39;card&#39;)">
           <div class="icon" style="display:flex; justify-content:center; align-items:center; gap:6px;">
             <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
               <rect x="3" y="7" width="26" height="18" rx="4" fill="currentColor" opacity="0.15"></rect>
@@ -683,7 +683,7 @@
       </div>
 
       <!-- 계좌이체 입금 안내 -->
-      <div id="bankInfo" style="margin-top: 16px; display: block;">
+      <div id="bankInfo" style="margin-top: 16px; display: none;">
         <div class="bank-info">
           <p>
             은행: <strong>IBK 기업은행</strong><br>
@@ -695,7 +695,7 @@
       </div>
 
       <!-- 카드결제 안내 -->
-      <div id="cardInfo" style="margin-top: 16px; display: none;">
+      <div id="cardInfo" style="margin-top: 16px; display: block;">
         <div class="card-guide">
           <div class="card-guide-icon">💳</div>
           <div style="font-size:12px; color:#A8A8A8; font-weight:500; line-height:1.8; margin-bottom:8px;">카드결제 · 네이버페이 · 카카오페이<br>애플페이 · 페이코 · 스마일페이 · 토스페이</div>
@@ -712,9 +712,9 @@
       </div>
 
       <div class="form-group">
-        <label id="nameLabel">주문자명(입금자명) <span class="required">*</span></label>
+        <label id="nameLabel">주문자명 <span class="required">*</span></label>
         <input type="text" id="name" placeholder="이름을 입력해 주세요">
-        <div class="hint" id="nameHint" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255, 152, 0, 0.12); padding: 8px 14px; border-radius: 8px; font-size: 13px; color: rgb(230, 81, 0); font-weight: 600;">⚠️ 카페 아이디 말고 꼭 입금자 실명을 적어주세요. 입금 확인 시 필요합니다.</div>
+        <div class="hint" id="nameHint" style="display:inline-flex; align-items:center; gap:6px; background:rgba(255,152,0,0.12); padding:8px 14px; border-radius:8px; font-size:13px; color:#e65100; font-weight:600;">⚠️ 카페 아이디 말고 꼭 입금자 실명을 적어주세요. 입금 확인 시 필요합니다.</div>
         <div class="error-msg" id="nameErr">이름을 입력해 주세요</div>
       </div>
 
@@ -766,19 +766,19 @@
       </div>
 
       <div class="form-group">
-        <label id="amountLabel">입금 금액 <span class="required">*</span></label>
-        <input type="number" id="amount" placeholder="입금하실 금액 입력" inputmode="numeric" pattern="[0-9]*" oninput="updateAmount()">
-        <div class="hint" id="amountHint">택배비를 포함한 총 금액을 입력해 주세요.</div>
+        <label id="amountLabel">카드 결제 금액 <span class="required">*</span></label>
+        <input type="number" id="amount" placeholder="결제하실 금액 입력" inputmode="numeric" pattern="[0-9]*" oninput="updateAmount()">
+        <div class="hint" id="amountHint">택배비를 포함한 총 결제금액을 입력해 주세요.</div>
         <div class="error-msg" id="amountErr">금액을 입력해 주세요</div>
         <div class="amount-display" id="amountDisplay" style="display:none">
-          <div class="label" id="amountDisplayLabel">입금 금액</div>
+          <div class="label" id="amountDisplayLabel">카드 결제 금액</div>
           <div class="value" id="amountValue"></div>
         </div>
       </div>
     </div>
 
     <!-- 세금계산서 / 현금영수증 -->
-    <div class="card" id="receiptCard" style="display: block;">
+    <div class="card" id="receiptCard" style="display: none;">
       <div class="card-title">
         <span class="title-icon">🧾</span>
         세금계산서 / 현금영수증
@@ -786,21 +786,30 @@
       <div class="form-group">
         <label>발행 유형 선택</label>
         <div class="receipt-options">
-          <div class="receipt-option selected" id="rec_none" onclick="selectReceipt(&#39;none&#39;)">해당없음</div>
+          <div class="receipt-option selected" id="rec_none" onclick="selectReceipt(&#39;none&#39;)">필요없음</div>
           <div class="receipt-option" id="rec_cash" onclick="selectReceipt(&#39;cash&#39;)">현금영수증</div>
           <div class="receipt-option" id="rec_expense" onclick="selectReceipt(&#39;expense&#39;)">지출증빙</div>
-          <div class="receipt-option" id="rec_tax" onclick="selectReceipt(&#39;tax&#39;)">계산서</div>
+          <div class="receipt-option" id="rec_tax" onclick="selectReceipt(&#39;tax&#39;)">세금계산서</div>
         </div>
 
         <div class="receipt-detail" id="receiptDetail" style="display:none; margin-top:14px;">
+          <label>휴대전화 번호 <span class="required">*</span></label>
           <input type="tel" id="receiptNumber" placeholder="휴대전화 번호를 입력해 주세요 (숫자만)" maxlength="11" inputmode="numeric" pattern="[0-9]*" oninput="this.value=this.value.replace(/[^0-9]/g,&#39;&#39;)">
+          <div class="error-msg" id="receiptNumberErr">휴대전화 번호를 입력해 주세요</div>
         </div>
         <div class="receipt-detail" id="expenseDetail" style="display:none; margin-top:14px;">
+          <label>사업자등록번호 <span class="required">*</span></label>
           <input type="tel" id="expenseNumber" placeholder="사업자등록번호 10자리 입력 (숫자만)" maxlength="10" inputmode="numeric" pattern="[0-9]*" oninput="this.value=this.value.replace(/[^0-9]/g,&#39;&#39;)">
+          <div class="error-msg" id="expenseNumberErr">사업자등록번호 10자리를 입력해 주세요</div>
         </div>
         <div class="receipt-detail" id="taxDetail" style="display:none; margin-top:14px;">
-          <input type="text" id="bizName" placeholder="사업자명 입력" style="margin-bottom:8px;">
-          <input type="tel" id="bizNumber" placeholder="사업자번호 10자리 입력 (숫자만)" maxlength="10" inputmode="numeric" pattern="[0-9]*" oninput="this.value=this.value.replace(/[^0-9]/g,&#39;&#39;)" style="margin-bottom:8px;">
+          <label>사업자명 <span class="required">*</span></label>
+          <input type="text" id="bizName" placeholder="사업자명 입력" style="margin-bottom:4px;">
+          <div class="error-msg" id="bizNameErr">사업자명을 입력해 주세요</div>
+          <label style="margin-top:10px; display:block;">사업자번호 <span class="required">*</span></label>
+          <input type="tel" id="bizNumber" placeholder="사업자번호 10자리 입력 (숫자만)" maxlength="10" inputmode="numeric" pattern="[0-9]*" oninput="this.value=this.value.replace(/[^0-9]/g,&#39;&#39;)" style="margin-bottom:4px;">
+          <div class="error-msg" id="bizNumberErr">사업자번호 10자리를 입력해 주세요</div>
+          <label style="margin-top:10px; display:block;">이메일 <span style="font-size:12px;color:#A8A8A8;">(선택)</span></label>
           <div style="margin-bottom:8px;">
             <div style="display:flex; gap:6px; align-items:center;">
               <input type="text" id="bizEmailId" placeholder="이메일" style="flex:1; margin-bottom:0;">
@@ -855,7 +864,7 @@
       <div class="error-msg" id="privacyErr">개인정보 수집 및 이용에 동의해 주세요</div>
     </div>
 
-    <button class="submit-btn" id="submitBtn" onclick="submitOrder()">주문 완료하기</button>
+    <button class="submit-btn" id="submitBtn" onclick="submitOrder()">카드 결제 진행</button>
   </div>
 
   <!-- 완료 화면 -->
@@ -1034,18 +1043,38 @@ function submitOrder() {
   // 현금결제(계좌이체) 시 입금자명 확인 팝업
   if (selectedPay === 'transfer') {
     var amountFormatted = parseInt(amount).toLocaleString('ko-KR');
-    var confirmed = confirm('입금자명과 금액을 확인해 주세요!\n\n입금자명: ' + name + '\n입금 금액: ' + amountFormatted + '원\n\n맞으면 [확인], 다시 입력하려면 [취소]를 눌러주세요.');
+    var address1 = document.getElementById('address1').value.trim();
+    var address2 = document.getElementById('address2').value.trim();
+    var postcode = document.getElementById('postcode').value.trim();
+    var fullAddress = address1 + (address2 ? ' ' + address2 : '') + (postcode ? ' (' + postcode + ')' : '');
+    var confirmed = confirm('입금자명과 금액을 확인해 주세요!\n\n입금자명: ' + name + '\n입금 금액: ' + amountFormatted + '원\n연락처: ' + (phone || '미입력') + '\n주소: ' + (fullAddress || '미입력') + '\n\n맞으면 [확인], 다시 입력하려면 [취소]를 눌러주세요.');
     if (!confirmed) return;
   }
 
-  if (selectedReceipt === 'tax') {
-    var bizNum = document.getElementById('bizNumber').value.trim();
-    if (!bizNum) { alert('계산서 발행을 위해 사업자번호를 입력해 주세요.'); return; }
-    if (bizNum.length !== 10) { alert('사업자번호 10자리를 정확히 입력해 주세요.'); return; }
+  if (selectedReceipt === 'cash') {
+    var recNum = document.getElementById('receiptNumber').value.trim();
+    if (!recNum || recNum.length < 10) {
+      document.getElementById('receiptNumberErr').style.display = 'block';
+      return;
+    }
+    document.getElementById('receiptNumberErr').style.display = 'none';
   }
+
   if (selectedReceipt === 'expense') {
     var expNum = document.getElementById('expenseNumber').value.trim();
-    if (expNum.length !== 10) { alert('사업자등록번호 10자리를 정확히 입력해 주세요.'); return; }
+    if (!expNum || expNum.length !== 10) {
+      document.getElementById('expenseNumberErr').style.display = 'block';
+      return;
+    }
+    document.getElementById('expenseNumberErr').style.display = 'none';
+  }
+  if (selectedReceipt === 'tax') {
+    var bizNm = document.getElementById('bizName').value.trim();
+    var bizNum = document.getElementById('bizNumber').value.trim();
+    var valid2 = true;
+    if (!bizNm) { document.getElementById('bizNameErr').style.display = 'block'; valid2 = false; } else { document.getElementById('bizNameErr').style.display = 'none'; }
+    if (!bizNum || bizNum.length !== 10) { document.getElementById('bizNumberErr').style.display = 'block'; valid2 = false; } else { document.getElementById('bizNumberErr').style.display = 'none'; }
+    if (!valid2) return;
   }
 
   var btn = document.querySelector('.submit-btn');
@@ -1058,7 +1087,7 @@ function submitOrder() {
     name: name, phone: phone,
     address: address1 + (address2 ? ' ' + address2 : '') + ' (' + postcode + ')',
     product: product, quantity: quantity, amount: amount,
-    receiptType: selectedReceipt === 'none' ? '해당없음' : selectedReceipt === 'cash' ? '현금영수증' : selectedReceipt === 'expense' ? '사업자지출증빙' : '계산서발행',
+    receiptType: selectedReceipt === 'none' ? '필요없음' : selectedReceipt === 'cash' ? '현금영수증' : selectedReceipt === 'expense' ? '사업자지출증빙' : '계산서발행',
     receiptNumber: selectedReceipt === 'cash' ? document.getElementById('receiptNumber').value.trim() : selectedReceipt === 'expense' ? document.getElementById('expenseNumber').value.trim() : '',
     bizName: document.getElementById('bizName').value.trim(),
     bizNumber: document.getElementById('bizNumber').value.trim(),
