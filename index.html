@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_25.html -->
+<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_26.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -620,7 +620,7 @@
         결제 방법
       </div>
       <div class="pay-options">
-        <div class="pay-option" id="pay_transfer" onclick="selectPay(&#39;transfer&#39;)">
+        <div class="pay-option selected" id="pay_transfer" onclick="selectPay(&#39;transfer&#39;)">
           <div class="icon">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
               <rect x="4" y="8" width="24" height="16" rx="4" fill="currentColor" opacity="0.15"></rect>
@@ -633,7 +633,7 @@
           </div>
           계좌이체
         </div>
-        <div class="pay-option selected" id="pay_card" onclick="selectPay(&#39;card&#39;)">
+        <div class="pay-option" id="pay_card" onclick="selectPay(&#39;card&#39;)">
           <div class="icon">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
               <rect x="3" y="7" width="26" height="18" rx="4" fill="currentColor" opacity="0.15"></rect>
@@ -648,7 +648,7 @@
       </div>
 
       <!-- 계좌이체 입금 안내 -->
-      <div id="bankInfo" style="margin-top: 16px; display: none;">
+      <div id="bankInfo" style="margin-top:16px;">
         <div class="bank-info">
           <p>
             은행: <strong>IBK 기업은행</strong><br>
@@ -660,7 +660,7 @@
       </div>
 
       <!-- 카드결제 안내 -->
-      <div id="cardInfo" style="margin-top: 16px; display: block;">
+      <div id="cardInfo" style="margin-top:16px; display:none;">
         <div class="card-guide">
           <div class="card-guide-icon">💳</div>
           <p>주문서 작성 완료 후<br>카드 결제 페이지로 자동 이동됩니다.<br><span style="font-size:13px;color:#A8A8A8;">( 2초 후 자동 이동 )</span></p>
@@ -676,9 +676,9 @@
       </div>
 
       <div class="form-group">
-        <label id="nameLabel">주문자명 <span class="required">*</span></label>
+        <label id="nameLabel">주문자명(입금자명) <span class="required">*</span></label>
         <input type="text" id="name" placeholder="이름을 입력해 주세요">
-        <div class="hint" id="nameHint">주문자 성함을 입력해 주세요.</div>
+        <div class="hint" id="nameHint">꼭 입금자명을 적어주세요. 입금 확인 시 필요합니다.</div>
         <div class="error-msg" id="nameErr">이름을 입력해 주세요</div>
       </div>
 
@@ -730,19 +730,19 @@
       </div>
 
       <div class="form-group">
-        <label id="amountLabel">카드 결제 금액 <span class="required">*</span></label>
-        <input type="number" id="amount" placeholder="결제하실 금액 입력" inputmode="numeric" pattern="[0-9]*" oninput="updateAmount()">
-        <div class="hint" id="amountHint">택배비를 포함한 총 결제금액을 입력해 주세요.</div>
+        <label id="amountLabel">입금 금액 <span class="required">*</span></label>
+        <input type="number" id="amount" placeholder="입금하실 금액 입력" inputmode="numeric" pattern="[0-9]*" oninput="updateAmount()">
+        <div class="hint" id="amountHint">택배비를 포함한 총 금액을 입력해 주세요.</div>
         <div class="error-msg" id="amountErr">금액을 입력해 주세요</div>
         <div class="amount-display" id="amountDisplay" style="display:none">
-          <div class="label" id="amountDisplayLabel">카드 결제 금액</div>
+          <div class="label" id="amountDisplayLabel">입금 금액</div>
           <div class="value" id="amountValue"></div>
         </div>
       </div>
     </div>
 
     <!-- 세금계산서 / 현금영수증 -->
-    <div class="card" id="receiptCard" style="display: none;">
+    <div class="card" id="receiptCard">
       <div class="card-title">
         <span class="title-icon">🧾</span>
         세금계산서 / 현금영수증
@@ -819,7 +819,7 @@
       <div class="error-msg" id="privacyErr">개인정보 수집 및 이용에 동의해 주세요</div>
     </div>
 
-    <button class="submit-btn" id="submitBtn" onclick="submitOrder()">카드 결제 진행</button>
+    <button class="submit-btn" id="submitBtn" onclick="submitOrder()">주문 완료하기</button>
   </div>
 
   <!-- 완료 화면 -->
@@ -954,19 +954,6 @@ function showSuccess() {
   document.getElementById('successBox').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
   if (selectedPay === 'card') {
-    // 페이앱 JS API로 결제창 바로 호출
-    var cardName = document.getElementById('name').value.trim();
-    var cardPhone = document.getElementById('phone').value.trim();
-    var cardProduct = document.getElementById('product').value.trim();
-    var cardAmount = parseInt(document.getElementById('amount').value.trim());
-    PayApp.setParam('userid', 'enule85');
-    PayApp.setParam('shopname', '다이홀릭');
-    PayApp.setParam('goodname', cardProduct || '주문상품');
-    PayApp.setParam('price', cardAmount);
-    PayApp.setParam('recvphone', cardPhone);
-    PayApp.setParam('memo', cardName + ' 주문');
-    PayApp.payrequest();
-    // 폼 숨기고 안내 메시지
     document.getElementById('successMsg').innerHTML = '결제창이 열렸습니다.<br><span style="font-size:14px;color:#7A7A7A;">결제창이 보이지 않으면 팝업 허용 후 다시 시도해 주세요.</span>';
   } else {
     var name = document.getElementById('name').value.trim();
@@ -1043,9 +1030,31 @@ function submitOrder() {
     submittedAt: new Date().toLocaleString('ko-KR')
   };
 
-  fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payload) })
-    .then(function() { showSuccess(); })
-    .catch(function() { showSuccess(); });
+  if (selectedPay === 'card') {
+    // 카드결제: 스프레드시트 전송 후 페이앱 결제창 호출
+    var cardName = name;
+    var cardPhone = phone;
+    var cardProduct = product;
+    var cardAmount = parseInt(amount);
+    fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payload) })
+      .then(function() {})
+      .catch(function() {});
+    // 페이앱 결제창 바로 호출
+    PayApp.setParam('userid', 'enule85');
+    PayApp.setParam('shopname', '다이홀릭');
+    PayApp.setParam('goodname', cardProduct || '주문상품');
+    PayApp.setParam('price', cardAmount);
+    PayApp.setParam('recvphone', cardPhone);
+    PayApp.setParam('memo', cardName + ' 주문');
+    PayApp.payrequest();
+    btn.disabled = false;
+    btn.textContent = '카드 결제 진행';
+  } else {
+    // 계좌이체: 기존 방식
+    fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payload) })
+      .then(function() { showSuccess(); })
+      .catch(function() { showSuccess(); });
+  }
 }
 </script>
 
