@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_37.html -->
+<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_52.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -262,6 +262,26 @@
 
   .pay-option > * { position: relative; z-index: 1; }
 
+  .pay-option {
+    flex: 1;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: all var(--transition);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-sub);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+  }
+
   .pay-option.selected {
     border-color: #D0D0D0;
     background: #F0F0EE;
@@ -275,7 +295,8 @@
     transition: color var(--transition);
   }
 
-  .pay-option.selected .icon { color: var(--text); }
+  #pay_transfer.selected .icon { color: #3B82F6; }
+  #pay_card.selected .icon { color: #8B5CF6; }
 
   .pay-option:not(.selected):hover {
     border-color: #D0D0D0;
@@ -289,6 +310,11 @@
     border-radius: 14px;
     padding: 22px;
     border: 1px solid rgba(0,0,0,0.04);
+    min-height: 230px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .bank-info p {
@@ -316,9 +342,14 @@
   .card-guide {
     background: linear-gradient(135deg, #F5F5F0 0%, #EFEFEB 100%);
     border-radius: 14px;
-    padding: 28px 22px;
+    padding: 22px;
     text-align: center;
     border: 1px solid rgba(0,0,0,0.04);
+    min-height: 230px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .card-guide .card-guide-icon {
@@ -619,7 +650,7 @@
         결제 방법
       </div>
       <div class="pay-options">
-        <div class="pay-option selected" id="pay_transfer" onclick="selectPay(&#39;transfer&#39;)">
+        <div class="pay-option" id="pay_transfer" onclick="selectPay(&#39;transfer&#39;)">
           <div class="icon">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
               <rect x="4" y="8" width="24" height="16" rx="4" fill="currentColor" opacity="0.15"></rect>
@@ -632,22 +663,27 @@
           </div>
           계좌이체
         </div>
-        <div class="pay-option" id="pay_card" onclick="selectPay(&#39;card&#39;)">
-          <div class="icon">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <div class="pay-option selected" id="pay_card" onclick="selectPay(&#39;card&#39;)">
+          <div class="icon" style="display:flex; justify-content:center; align-items:center; gap:6px;">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
               <rect x="3" y="7" width="26" height="18" rx="4" fill="currentColor" opacity="0.15"></rect>
               <rect x="3" y="7" width="26" height="18" rx="4" stroke="currentColor" stroke-width="2"></rect>
               <rect x="3" y="12" width="26" height="4" fill="currentColor" opacity="0.3"></rect>
               <rect x="7" y="20" width="6" height="2" rx="1" fill="currentColor"></rect>
               <rect x="15" y="20" width="4" height="2" rx="1" fill="currentColor"></rect>
             </svg>
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+              <rect x="2" y="6" width="28" height="20" rx="5" fill="currentColor" opacity="0.12"></rect>
+              <rect x="2" y="6" width="28" height="20" rx="5" stroke="currentColor" stroke-width="2"></rect>
+              <text x="16" y="20" text-anchor="middle" font-size="10" font-weight="800" fill="currentColor" font-family="Arial,sans-serif">PAY</text>
+            </svg>
           </div>
-          카드결제
+          카드결제 / PAY결제
         </div>
       </div>
 
       <!-- 계좌이체 입금 안내 -->
-      <div id="bankInfo" style="margin-top:16px;">
+      <div id="bankInfo" style="margin-top: 16px; display: none;">
         <div class="bank-info">
           <p>
             은행: <strong>IBK 기업은행</strong><br>
@@ -659,10 +695,11 @@
       </div>
 
       <!-- 카드결제 안내 -->
-      <div id="cardInfo" style="margin-top:16px; display:none;">
+      <div id="cardInfo" style="margin-top: 16px; display: block;">
         <div class="card-guide">
           <div class="card-guide-icon">💳</div>
-          <p>주문서 작성 완료 후<br>카드 결제 페이지로 자동 이동됩니다.<br><span style="font-size:13px;color:#A8A8A8;">( 2초 후 자동 이동 )</span></p>
+          <div style="font-size:12px; color:#A8A8A8; font-weight:500; line-height:1.8; margin-bottom:8px;">카드결제 · 네이버페이 · 카카오페이<br>애플페이 · 페이코 · 스마일페이 · 토스페이</div>
+          <p>주문서 작성 완료 후<br>결제 페이지로 자동 이동됩니다.</p>
         </div>
       </div>
     </div>
@@ -675,9 +712,9 @@
       </div>
 
       <div class="form-group">
-        <label id="nameLabel">주문자명(입금자명) <span class="required">*</span></label>
-        <input type="text" id="name" placeholder="이름을 입력해 주세요" onblur="checkNameForTransfer()">
-        <div class="hint" id="nameHint">꼭 입금자명을 적어주세요. 입금 확인 시 필요합니다.</div>
+        <label id="nameLabel">주문자명 <span class="required">*</span></label>
+        <input type="text" id="name" placeholder="이름을 입력해 주세요">
+        <div class="hint" id="nameHint">주문자 성함을 입력해 주세요.</div>
         <div class="error-msg" id="nameErr">이름을 입력해 주세요</div>
       </div>
 
@@ -729,19 +766,19 @@
       </div>
 
       <div class="form-group">
-        <label id="amountLabel">입금 금액 <span class="required">*</span></label>
-        <input type="number" id="amount" placeholder="입금하실 금액 입력" inputmode="numeric" pattern="[0-9]*" oninput="updateAmount()">
-        <div class="hint" id="amountHint">택배비를 포함한 총 금액을 입력해 주세요.</div>
-        <div class="error-msg" id="amountErr">최소 결제 금액은 1,000원입니다</div>
+        <label id="amountLabel">카드 결제 금액 <span class="required">*</span></label>
+        <input type="number" id="amount" placeholder="결제하실 금액 입력" inputmode="numeric" pattern="[0-9]*" oninput="updateAmount()">
+        <div class="hint" id="amountHint">택배비를 포함한 총 결제금액을 입력해 주세요.</div>
+        <div class="error-msg" id="amountErr">금액을 입력해 주세요</div>
         <div class="amount-display" id="amountDisplay" style="display:none">
-          <div class="label" id="amountDisplayLabel">입금 금액</div>
+          <div class="label" id="amountDisplayLabel">카드 결제 금액</div>
           <div class="value" id="amountValue"></div>
         </div>
       </div>
     </div>
 
     <!-- 세금계산서 / 현금영수증 -->
-    <div class="card" id="receiptCard">
+    <div class="card" id="receiptCard" style="display: none;">
       <div class="card-title">
         <span class="title-icon">🧾</span>
         세금계산서 / 현금영수증
@@ -818,7 +855,7 @@
       <div class="error-msg" id="privacyErr">개인정보 수집 및 이용에 동의해 주세요</div>
     </div>
 
-    <button class="submit-btn" id="submitBtn" onclick="submitOrder()">주문 완료하기</button>
+    <button class="submit-btn" id="submitBtn" onclick="submitOrder()">카드 결제 진행</button>
   </div>
 
   <!-- 완료 화면 -->
@@ -932,38 +969,15 @@ function searchAddress() {
 
 
 
-function checkNameForTransfer() {
-  if (selectedPay !== 'transfer') return;
-  var name = document.getElementById('name').value.trim();
-  var amount = document.getElementById('amount').value.trim();
-  var phone = document.getElementById('phone').value.trim();
-  var address1 = document.getElementById('address1').value.trim();
-  var address2 = document.getElementById('address2').value.trim();
-  var postcode = document.getElementById('postcode').value.trim();
-  var fullAddress = address1 + (address2 ? ' ' + address2 : '') + (postcode ? ' (' + postcode + ')' : '');
-  if (!name) return;
-  if (!amount || parseInt(amount) <= 0) return;
-  var amountFormatted = parseInt(amount).toLocaleString('ko-KR');
-  confirm('입금자명과 금액을 확인해 주세요!\n\n입금자명: ' + name + '\n입금 금액: ' + amountFormatted + '원\n연락처: ' + (phone || '미입력') + '\n주소: ' + (fullAddress || '미입력') + '\n\n맞으면 [확인], 다시 입력하려면 [취소]를 눌러주세요.');
-}
-
 function updateAmount() {
   var val = document.getElementById('amount').value;
   var disp = document.getElementById('amountDisplay');
   var valEl = document.getElementById('amountValue');
-  var errEl = document.getElementById('amountErr');
-  var num = parseInt(val);
-  if (val && num > 0) {
+  if (val && parseInt(val) > 0) {
     disp.style.display = 'block';
-    valEl.textContent = num.toLocaleString('ko-KR') + '원';
+    valEl.textContent = parseInt(val).toLocaleString('ko-KR') + '원';
   } else {
     disp.style.display = 'none';
-  }
-  if (val && num < 1000) {
-    errEl.textContent = '최소 결제 금액은 1,000원입니다';
-    errEl.style.display = 'block';
-  } else if (val && num >= 1000) {
-    errEl.style.display = 'none';
   }
 }
 
@@ -1013,10 +1027,7 @@ function submitOrder() {
   showError('addressErr', !postcode); if (!postcode) valid = false;
   showError('productErr', !product); if (!product) valid = false;
   showError('quantityErr', !quantity); if (!quantity) valid = false;
-  var amountNum = parseInt(amount);
-  var amountInvalid = !amount || isNaN(amountNum) || amountNum < 1000;
-  showError('amountErr', amountInvalid);
-  if (amountInvalid) valid = false;
+  showError('amountErr', !amount); if (!amount) valid = false;
   showError('privacyErr', !privacyAgreed); if (!privacyAgreed) valid = false;
   if (!valid) return;
 
