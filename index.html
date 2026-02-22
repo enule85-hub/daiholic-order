@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_27.html -->
+<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_29.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1035,18 +1035,38 @@ function submitOrder() {
     var cardPhone = phone;
     var cardProduct = product;
     var cardAmount = parseInt(amount);
-    // 스프레드시트 전송
+    // Apps Script에 결제요청 → 페이앱 URL 받아서 이동
+    var payRequestData = {
+      type: 'payrequest',
+      goodname: cardProduct || '주문상품',
+      price: cardAmount,
+      recvphone: cardPhone,
+      memo: cardName + ' 주문'
+    };
+    // 주문서도 동시에 저장
     fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payload) })
       .then(function() {})
       .catch(function() {});
-    // 페이앱 결제링크로 금액/상품명 파라미터 전달하여 이동
-    var payUrl = 'https://payapp.kr/pay/link/enule85'
-      + '?goodname=' + encodeURIComponent(cardProduct || '주문상품')
-      + '&price=' + cardAmount
-      + '&recvphone=' + encodeURIComponent(cardPhone)
-      + '&memo=' + encodeURIComponent(cardName + ' 주문')
-      + '&redirectpay=1';
-    window.location.href = payUrl;
+    // 페이앱 결제 URL 요청
+    fetch(WEBHOOK_URL, {
+      method: 'POST',
+      body: JSON.stringify(payRequestData)
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.success && data.payUrl) {
+        window.location.href = data.payUrl;
+      } else {
+        alert('결제 요청 실패: ' + (data.message || '다시 시도해 주세요.'));
+        btn.disabled = false;
+        btn.textContent = '카드 결제 진행';
+      }
+    })
+    .catch(function() {
+      alert('결제 요청 중 오류가 발생했습니다. 다시 시도해 주세요.');
+      btn.disabled = false;
+      btn.textContent = '카드 결제 진행';
+    });
   } else {
     // 계좌이체: 기존 방식
     fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payload) })
