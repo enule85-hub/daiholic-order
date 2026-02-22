@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_62.html -->
+<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_64.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -562,15 +562,20 @@
 
   .success-box .icon {
     width: 72px; height: 72px;
-    background: linear-gradient(135deg, #4ADE80, #22C55E);
+    background: linear-gradient(135deg, #A78BFA, #7C3AED);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 20px;
-    font-size: 32px;
+    font-size: 36px;
     color: #fff;
-    box-shadow: 0 8px 24px rgba(74,222,128,0.3);
+    box-shadow: 0 8px 24px rgba(124,58,237,0.3);
+    animation: hourglassPulse 1.5s ease-in-out infinite;
+  }
+  @keyframes hourglassPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.08); opacity: 0.85; }
   }
 
   .success-box h2 {
@@ -869,9 +874,9 @@
 
   <!-- 완료 화면 -->
   <div class="success-box" id="successBox">
-    <div class="icon">✓</div>
-    <h2>주문이 접수되었습니다!</h2>
-    <p id="successMsg">확인 후 빠르게 발송해 드릴게요.<br><br>감사합니다 😊</p>
+    <div class="icon" id="successIcon">⏳</div>
+    <h2 id="successTitle">잠시만 기다려 주십시오</h2>
+    <p id="successMsg">주문이 접수되었습니다.<br>카드결제 페이지로 이동중입니다.</p>
   </div>
 
   <div class="footer">
@@ -999,7 +1004,7 @@ function showSuccess() {
   document.getElementById('successBox').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
   if (selectedPay === 'card') {
-    document.getElementById('successMsg').innerHTML = '결제창이 열렸습니다.<br><span style="font-size:14px;color:#7A7A7A;">결제창이 보이지 않으면 팝업 허용 후 다시 시도해 주세요.</span>';
+    document.getElementById('successMsg').innerHTML = '주문이 접수되었습니다.<br>카드결제 페이지로 이동중입니다.';
   } else {
     var name = document.getElementById('name').value.trim();
     var amount = document.getElementById('amount').value.trim();
