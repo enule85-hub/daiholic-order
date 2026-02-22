@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_60.html -->
+<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_61.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1112,7 +1112,6 @@ function submitOrder() {
     var cardPhone = phone;
     var cardProduct = product;
     var cardAmount = parseInt(amount);
-    // Apps Script에 결제요청 → 페이앱 URL 받아서 이동
     var payRequestData = {
       type: 'payrequest',
       goodname: cardProduct || '주문상품',
@@ -1120,17 +1119,15 @@ function submitOrder() {
       recvphone: cardPhone,
       memo: cardName + ' 주문'
     };
-    // 주문서도 동시에 저장
-    fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payload) })
-      .then(function() {})
-      .catch(function() {});
-    // 페이앱 결제 URL 요청
-    fetch(WEBHOOK_URL, {
-      method: 'POST',
-      body: JSON.stringify(payRequestData)
-    })
-    .then(function(res) { return res.json(); })
-    .then(function(data) {
+    // 화면 먼저 전환
+    showSuccess();
+    // 주문서 저장 + 결제 URL 요청 동시에
+    Promise.all([
+      fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payload) }).catch(function(){}),
+      fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payRequestData) }).then(function(res){ return res.json(); })
+    ])
+    .then(function(results) {
+      var data = results[1];
       if (data.success && data.payUrl) {
         window.location.href = data.payUrl;
       } else {
