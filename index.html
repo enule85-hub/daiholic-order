@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_69.html -->
+<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_70.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1005,8 +1005,16 @@ function showSuccess() {
   document.getElementById('successBox').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
   if (selectedPay === 'card') {
+    document.getElementById('successIcon').textContent = '⏳';
+    document.getElementById('successIcon').style.background = 'linear-gradient(135deg, #A78BFA, #7C3AED)';
+    document.getElementById('successIcon').style.boxShadow = '0 8px 24px rgba(124,58,237,0.3)';
+    document.getElementById('successTitle').textContent = '잠시만 기다려 주십시오';
     document.getElementById('successMsg').innerHTML = '주문이 접수되었습니다.<br>카드결제 페이지로 이동중입니다.';
   } else {
+    document.getElementById('successIcon').textContent = '✅';
+    document.getElementById('successIcon').style.background = 'linear-gradient(135deg, #4ADE80, #16A34A)';
+    document.getElementById('successIcon').style.boxShadow = '0 8px 24px rgba(22,163,74,0.3)';
+    document.getElementById('successTitle').textContent = '주문이 접수되었습니다!';
     var name = document.getElementById('name').value.trim();
     var amount = document.getElementById('amount').value.trim();
     var amountFormatted = parseInt(amount).toLocaleString('ko-KR');
