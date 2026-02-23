@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_73.html -->
+<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_74.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -403,6 +403,37 @@
 
   .receipt-detail.show { display: block; }
 
+  /* ─── Product Select ─── */
+  .product-select {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text);
+    background: var(--input-bg);
+    transition: all var(--transition);
+    outline: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+  }
+  .product-select:focus {
+    border-color: var(--text);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+  }
+  .shipping-info {
+    display: none;
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: #F0F9FF;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    color: #0369A1;
+    font-weight: 600;
+  }
+
   /* ─── Amount Display ─── */
   .amount-display {
     background: linear-gradient(135deg, var(--accent-light), #EFEFEB);
@@ -761,8 +792,9 @@
 
       <div class="form-group">
         <label>품목명 <span class="required">*</span></label>
-        <input type="text" id="product" placeholder="구매하실 상품명을 입력해 주세요">
-        <div class="error-msg" id="productErr">품목명을 입력해 주세요</div>
+        <select class="product-select" id="product" onchange="onProductSelect()"><option value="">상품 목록을 불러올 수 없습니다</option></select>
+        <div class="shipping-info" id="shippingInfo"></div>
+        <div class="error-msg" id="productErr">품목명을 선택해 주세요</div>
       </div>
 
       <div class="form-group">
@@ -888,9 +920,66 @@
 
 <script>
 var WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbw5oc6lprF-07bmb01AYuaDswvJM3hmQMA6RNRjZdUep8eEki4R8sm3zz5QWdyb5JBtNQ/exec";
+var PRODUCT_API_URL = "https://script.google.com/macros/s/AKfycby_Ipcifm1sJFswVXA1l5wPy5JkxQk8HSt_Q8Msyr241K4RcUhjE6E066vy4E4uIyiJRA/exec";
+var productList = [];
 var privacyAgreed = false;
 var selectedPay = 'transfer';
 var selectedReceipt = 'none';
+
+// ✅ 페이지 로딩 시 상품 목록 불러오기
+function loadProducts() {
+  var select = document.getElementById('product');
+  select.innerHTML = '<option value="">불러오는 중...</option>';
+  fetch(PRODUCT_API_URL)
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      productList = data;
+      select.innerHTML = '<option value="">상품을 선택해 주세요</option>';
+      data.forEach(function(item) {
+        var opt = document.createElement('option');
+        opt.value = item.name;
+        opt.dataset.price = item.price;
+        opt.dataset.shipping = item.shipping;
+        opt.textContent = item.name + ' (' + parseInt(item.price).toLocaleString('ko-KR') + '원)';
+        select.appendChild(opt);
+      });
+    })
+    .catch(function() {
+      select.innerHTML = '<option value="">상품 목록을 불러올 수 없습니다</option>';
+    });
+}
+
+// ✅ 상품 선택 시 금액 자동 입력
+function onProductSelect() {
+  var select = document.getElementById('product');
+  var selectedOpt = select.options[select.selectedIndex];
+  var shippingInfo = document.getElementById('shippingInfo');
+
+  if (!select.value) {
+    document.getElementById('amount').value = '';
+    shippingInfo.style.display = 'none';
+    updateAmount();
+    return;
+  }
+
+  var price = parseInt(selectedOpt.dataset.price) || 0;
+  var shipping = parseInt(selectedOpt.dataset.shipping) || 0;
+  var total = price + shipping;
+
+  document.getElementById('amount').value = total;
+
+  if (shipping > 0) {
+    shippingInfo.style.display = 'block';
+    shippingInfo.textContent = '🚚 상품금액 ' + price.toLocaleString('ko-KR') + '원 + 택배비 ' + shipping.toLocaleString('ko-KR') + '원 = 총 ' + total.toLocaleString('ko-KR') + '원';
+  } else {
+    shippingInfo.style.display = 'block';
+    shippingInfo.textContent = '🚚 무료배송 · 총 ' + total.toLocaleString('ko-KR') + '원';
+  }
+  updateAmount();
+}
+
+// 페이지 로드 시 실행
+window.onload = function() { loadProducts(); };
 
 function togglePrivacy() {
   privacyAgreed = !privacyAgreed;
