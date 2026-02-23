@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<!-- saved from url=(0043)file:///C:/Users/enule/Downloads/admin.html -->
+<html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>상품 관리</title>
+<link href="./admin_files/css2" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F6F4F0;
+    --card: #FFFFFF;
+    --text: #1B1B1B;
+    --text-sub: #7A7A7A;
+    --text-hint: #A8A8A8;
+    --accent: #1B1B1B;
+    --accent-light: #F0F0EE;
+    --danger: #EF4444;
+    --danger-light: #FEF2F2;
+    --success: #16A34A;
+    --success-light: #F0FDF4;
+    --border: #EBEBEB;
+    --input-bg: #F9F9F8;
+    --radius: 14px;
+    --radius-sm: 10px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.03);
+    --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    color: var(--text);
+  }
+
+  .page-wrapper {
+    padding: 24px 16px 60px;
+    max-width: 540px;
+    margin: 0 auto;
+  }
+
+  /* 헤더 */
+  .header {
+    text-align: center;
+    padding: 32px 0 28px;
+  }
+
+  .header h1 {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+
+  .header p {
+    font-size: 14px;
+    color: var(--text-sub);
+  }
+
+  /* 카드 */
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 14px;
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(0,0,0,0.03);
+  }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* 입력 */
+  .form-group { margin-bottom: 14px; }
+  .form-group:last-child { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-sub);
+    margin-bottom: 6px;
+  }
+
+  input[type="text"],
+  input[type="number"],
+  input[type="password"] {
+    width: 100%;
+    padding: 13px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text);
+    background: var(--input-bg);
+    transition: all var(--transition);
+    outline: none;
+  }
+
+  input:focus {
+    border-color: var(--text);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+  }
+
+  input::placeholder { color: #C4C4C4; }
+
+  /* 버튼 */
+  .btn {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+
+  .btn-primary {
+    background: var(--text);
+    color: #fff;
+  }
+
+  .btn-primary:hover { background: #333; transform: translateY(-1px); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+
+  .btn-success {
+    background: #16A34A;
+    color: #fff;
+  }
+
+  .btn-success:hover { background: #15803D; transform: translateY(-1px); }
+
+  /* 상품 카드 */
+  .product-item {
+    background: var(--input-bg);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    margin-bottom: 10px;
+    border: 1.5px solid var(--border);
+    transition: all var(--transition);
+  }
+
+  .product-item:last-child { margin-bottom: 0; }
+
+  .product-item:hover {
+    border-color: #D0D0D0;
+    background: #fff;
+  }
+
+  .product-name {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .product-meta {
+    font-size: 13px;
+    color: var(--text-sub);
+    margin-bottom: 12px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .product-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .badge-free {
+    display: inline-block;
+    background: #DCFCE7;
+    color: #16A34A;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 100px;
+  }
+
+  .product-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .btn-edit {
+    flex: 1;
+    padding: 9px;
+    background: var(--accent-light);
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    transition: all var(--transition);
+    color: var(--text);
+  }
+
+  .btn-edit:hover { background: #E0E0DE; }
+
+  .btn-delete {
+    flex: 1;
+    padding: 9px;
+    background: var(--danger-light);
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    transition: all var(--transition);
+    color: var(--danger);
+  }
+
+  .btn-delete:hover { background: #FEE2E2; }
+
+  /* 토스트 메시지 */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: #1B1B1B;
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    transition: transform 0.3s ease;
+    z-index: 999;
+    white-space: nowrap;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  /* 모달 */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 100;
+    align-items: flex-end;
+    justify-content: center;
+  }
+
+  .modal-overlay.show { display: flex; }
+
+  .modal {
+    background: #fff;
+    border-radius: 20px 20px 0 0;
+    padding: 28px 24px 40px;
+    width: 100%;
+    max-width: 540px;
+    animation: slideUp 0.3s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+
+  .modal-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 20px;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+  }
+
+  .btn-cancel {
+    flex: 1;
+    padding: 14px;
+    background: var(--accent-light);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    color: var(--text);
+    transition: all var(--transition);
+  }
+
+  .btn-cancel:hover { background: #E0E0DE; }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 0;
+    color: var(--text-hint);
+    font-size: 14px;
+  }
+
+  .empty-state .empty-icon { font-size: 40px; margin-bottom: 12px; }
+
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrapper">
+  <div class="header">
+    <h1>🛍️ 상품 관리</h1>
+    <p>상품을 쉽게 추가하고 수정할 수 있어요</p>
+  </div>
+
+  <!-- 비밀번호 화면 -->
+  <div id="loginArea">
+    <div class="card">
+      <div class="card-title">🔒 관리자 로그인</div>
+      <div class="form-group">
+        <label>비밀번호</label>
+        <input type="password" id="passwordInput" placeholder="비밀번호를 입력해 주세요" onkeydown="if(event.key===&#39;Enter&#39;) login()">
+      </div>
+      <div style="margin-top:4px; margin-bottom:16px;">
+        <span id="loginErr" style="display:none; font-size:12px; color:var(--danger); font-weight:500;">비밀번호가 틀렸습니다</span>
+      </div>
+      <button class="btn btn-primary" onclick="login()">로그인</button>
+    </div>
+  </div>
+
+  <!-- 관리 화면 -->
+  <div id="adminArea" style="display:none;">
+
+    <!-- 상품 추가 버튼 -->
+    <button class="btn btn-success" onclick="openAddModal()" style="margin-bottom:14px;">
+      ＋ 새 상품 추가
+    </button>
+
+    <!-- 상품 목록 -->
+    <div class="card">
+      <div class="card-title">📦 등록된 상품 목록</div>
+      <div id="productList">
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <div>불러오는 중...</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 추가/수정 모달 -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-title" id="modalTitle">새 상품 추가</div>
+    <div class="form-group">
+      <label>상품명 *</label>
+      <input type="text" id="modalName" placeholder="예) 배터리33">
+    </div>
+    <div class="form-group">
+      <label>상품 금액 (원) *</label>
+      <input type="number" id="modalPrice" placeholder="예) 3000" inputmode="numeric">
+    </div>
+    <div class="form-group">
+      <label>택배비 (원) — 무료배송이면 비워두세요</label>
+      <input type="number" id="modalShipping" placeholder="예) 3500 (무료면 비워두세요)" inputmode="numeric">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">취소</button>
+      <button class="btn btn-primary" id="modalSaveBtn" onclick="saveProduct()" style="flex:2;">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- 토스트 -->
+<div class="toast" id="toast"></div>
+
+<script>
+var PRODUCT_API_URL = "https://script.google.com/macros/s/AKfycby_Ipcifm1sJFswVXA1l5wPy5JkxQk8HSt_Q8Msyr241K4RcUhjE6E066vy4E4uIyiJRA/exec";
+var adminPassword = "";
+var editingRow = null;
+
+function login() {
+  var pw = document.getElementById('passwordInput').value;
+  if (!pw) return;
+
+  // 비밀번호 확인을 위해 상품 목록 요청 (서버에서 비밀번호 검증)
+  fetch(PRODUCT_API_URL + '?action=list&password=' + encodeURIComponent(pw))
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.error) {
+        document.getElementById('loginErr').style.display = 'block';
+        return;
+      }
+      adminPassword = pw;
+      document.getElementById('loginArea').style.display = 'none';
+      document.getElementById('adminArea').style.display = 'block';
+      document.getElementById('loginErr').style.display = 'none';
+      renderProducts(data);
+    })
+    .catch(function() {
+      document.getElementById('loginErr').style.display = 'block';
+    });
+}
+
+function loadProducts() {
+  fetch(PRODUCT_API_URL + '?action=list')
+    .then(function(res) { return res.json(); })
+    .then(function(data) { renderProducts(data); })
+    .catch(function() { showToast('❌ 목록을 불러올 수 없습니다'); });
+}
+
+function renderProducts(data) {
+  var el = document.getElementById('productList');
+  if (!data || data.length === 0) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div>등록된 상품이 없어요</div></div>';
+    return;
+  }
+  el.innerHTML = data.map(function(p) {
+    var shippingText = p.shipping > 0
+      ? '택배비 ' + p.shipping.toLocaleString() + '원'
+      : '<span class="badge-free">무료배송</span>';
+    return '<div class="product-item">' +
+      '<div class="product-name">' + p.name + '</div>' +
+      '<div class="product-meta">' +
+        '<span>💰 ' + p.price.toLocaleString() + '원</span>' +
+        '<span>🚚 ' + shippingText + '</span>' +
+      '</div>' +
+      '<div class="product-actions">' +
+        '<button class="btn-edit" onclick="openEditModal(' + p.row + ',\'' + p.name + '\',' + p.price + ',' + p.shipping + ')">✏️ 수정</button>' +
+        '<button class="btn-delete" onclick="deleteProduct(' + p.row + ',\'' + p.name + '\')">🗑️ 삭제</button>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function openAddModal() {
+  editingRow = null;
+  document.getElementById('modalTitle').textContent = '새 상품 추가';
+  document.getElementById('modalName').value = '';
+  document.getElementById('modalPrice').value = '';
+  document.getElementById('modalShipping').value = '';
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function openEditModal(row, name, price, shipping) {
+  editingRow = row;
+  document.getElementById('modalTitle').textContent = '상품 수정';
+  document.getElementById('modalName').value = name;
+  document.getElementById('modalPrice').value = price;
+  document.getElementById('modalShipping').value = shipping > 0 ? shipping : '';
+  document.getElementById('modalOverlay').classList.add('show');
+}
+
+function closeModal(event) {
+  if (event && event.target !== document.getElementById('modalOverlay')) return;
+  document.getElementById('modalOverlay').classList.remove('show');
+}
+
+function saveProduct() {
+  var name = document.getElementById('modalName').value.trim();
+  var price = document.getElementById('modalPrice').value.trim();
+  var shipping = document.getElementById('modalShipping').value.trim() || '0';
+
+  if (!name || !price) {
+    showToast('⚠️ 상품명과 금액을 입력해 주세요');
+    return;
+  }
+
+  var btn = document.getElementById('modalSaveBtn');
+  btn.disabled = true;
+  btn.textContent = '저장 중...';
+
+  var action = editingRow ? 'edit' : 'add';
+  var url = PRODUCT_API_URL + '?action=' + action +
+    '&password=' + encodeURIComponent(adminPassword) +
+    '&name=' + encodeURIComponent(name) +
+    '&price=' + encodeURIComponent(price) +
+    '&shipping=' + encodeURIComponent(shipping) +
+    (editingRow ? '&row=' + editingRow : '');
+
+  fetch(url)
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      btn.disabled = false;
+      btn.textContent = '저장';
+      if (data.success) {
+        document.getElementById('modalOverlay').classList.remove('show');
+        showToast(editingRow ? '✅ 수정되었습니다' : '✅ 추가되었습니다');
+        loadProducts();
+      } else {
+        showToast('❌ ' + (data.error || '오류가 발생했습니다'));
+      }
+    })
+    .catch(function() {
+      btn.disabled = false;
+      btn.textContent = '저장';
+      showToast('❌ 오류가 발생했습니다');
+    });
+}
+
+function deleteProduct(row, name) {
+  if (!confirm('"' + name + '" 상품을 삭제할까요?')) return;
+
+  fetch(PRODUCT_API_URL + '?action=delete&password=' + encodeURIComponent(adminPassword) + '&row=' + row)
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.success) {
+        showToast('🗑️ 삭제되었습니다');
+        loadProducts();
+      } else {
+        showToast('❌ ' + (data.error || '오류가 발생했습니다'));
+      }
+    })
+    .catch(function() { showToast('❌ 오류가 발생했습니다'); });
+}
+
+function showToast(msg) {
+  var toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(function() { toast.classList.remove('show'); }, 2500);
+}
+</script>
+
+
+</body></html>
