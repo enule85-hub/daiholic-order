@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_72.html -->
+<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_73.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -725,8 +725,9 @@
 
       <div class="form-group">
         <label>연락처 <span class="required">*</span></label>
-        <input type="tel" id="phone" placeholder="010-0000-0000">
+        <input type="tel" id="phone" placeholder="010-0000-0000" oninput="validatePhone()">
         <div class="error-msg" id="phoneErr">연락처를 입력해 주세요</div>
+        <div class="error-msg" id="phoneFormatErr">연락처를 확인해 주세요 (01로 시작하는 11자리 번호)</div>
       </div>
     </div>
 
@@ -996,6 +997,21 @@ function updateAmount() {
   }
 }
 
+function validatePhone() {
+  var phone = document.getElementById('phone').value.trim();
+  var phoneClean = phone.replace(/-/g, '');
+  if (!phone) {
+    showError('phoneErr', false);
+    showError('phoneFormatErr', false);
+  } else if (phoneClean.length === 11 && phoneClean.startsWith('01')) {
+    showError('phoneErr', false);
+    showError('phoneFormatErr', false);
+  } else {
+    showError('phoneErr', false);
+    showError('phoneFormatErr', true);
+  }
+}
+
 function showError(id, show) {
   document.getElementById(id).style.display = show ? 'block' : 'none';
 }
@@ -1046,7 +1062,13 @@ function submitOrder() {
 
   var valid = true;
   showError('nameErr', !name); if (!name) valid = false;
-  showError('phoneErr', !phone); if (!phone) valid = false;
+
+  // 연락처 유효성 검사
+  var phoneClean = phone.replace(/-/g, '');
+  var phoneEmpty = !phone;
+  var phoneInvalid = !phoneEmpty && (phoneClean.length !== 11 || !phoneClean.startsWith('01'));
+  showError('phoneErr', phoneEmpty); if (phoneEmpty) valid = false;
+  showError('phoneFormatErr', phoneInvalid); if (phoneInvalid) valid = false;
   showError('addressErr', !postcode); if (!postcode) valid = false;
   showError('productErr', !product); if (!product) valid = false;
   showError('quantityErr', !quantity); if (!quantity) valid = false;
