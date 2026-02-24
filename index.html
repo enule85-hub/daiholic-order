@@ -990,6 +990,10 @@ function onProductSelect() {
     return;
   }
 
+  // 상품 변경 시 수량 1로 초기화
+  document.getElementById('quantity').value = 1;
+  document.getElementById('quantity').style.borderColor = '';
+
   var qty = parseInt(document.getElementById('quantity').value) || 1;
   var price = parseInt(selectedOpt.dataset.price) || 0;
   var shipping = parseInt(selectedOpt.dataset.shipping) || 0;
