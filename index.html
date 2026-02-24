@@ -428,6 +428,16 @@
     background: #fff;
     box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
   }
+  .shipping-fee-info {
+    display: none;
+    margin-top: 8px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    padding: 0 2px;
+  }
+  .shipping-fee-info .free { color: #059669; }
   .shipping-info {
     display: none;
     margin-top: 8px;
@@ -814,6 +824,7 @@
         <div class="hint" id="amountHint">상품 선택 시 자동으로 계산됩니다.</div>
         <div class="error-msg" id="amountErr">금액을 입력해 주세요</div>
         <div class="error-msg" id="amountMinErr">카드 결제 최소 금액은 1,000원입니다</div>
+        <div class="shipping-fee-info" id="shippingFeeInfo" style="display:none"></div>
         <div class="amount-display" id="amountDisplay" style="display:none">
           <div class="label" id="amountDisplayLabel">결제 금액</div>
           <div class="value" id="amountValue"></div>
@@ -974,6 +985,7 @@ function onProductSelect() {
   if (!select.value) {
     document.getElementById('amount').value = '';
     document.getElementById('stockInfo').style.display = 'none';
+    document.getElementById('shippingFeeInfo').style.display = 'none';
     updateAmount();
     return;
   }
@@ -986,19 +998,27 @@ function onProductSelect() {
   document.getElementById('amount').value = total;
   updateAmount();
 
+  // 택배비 표시
+  var feeEl = document.getElementById('shippingFeeInfo');
+  if (shipping > 0) {
+    feeEl.style.display = 'block';
+    feeEl.innerHTML = '📦 택배비 <strong>' + shipping.toLocaleString('ko-KR') + '원</strong>';
+  } else {
+    feeEl.style.display = 'block';
+    feeEl.innerHTML = '📦 <span class="free">무료배송</span>';
+  }
+
   // 재고 표시
   var stockEl = document.getElementById('stockInfo');
   var stockVal = selectedOpt.dataset.stock;
-  if (stockVal === '' || stockVal === null || stockVal === undefined) {
-    stockEl.style.display = 'block';
+  stockEl.style.display = 'block';
+  if (stockVal === '' || stockVal === 'undefined' || stockVal === undefined || stockVal === null) {
     stockEl.className = 'stock-info unlimited';
     stockEl.textContent = '✓ 재고 무제한';
   } else if (Number(stockVal) <= 0) {
-    stockEl.style.display = 'block';
     stockEl.className = 'stock-info soldout';
     stockEl.textContent = '✕ 품절';
   } else {
-    stockEl.style.display = 'block';
     stockEl.className = 'stock-info in-stock';
     stockEl.textContent = '✓ 재고 ' + Number(stockVal) + '개 남음';
   }
