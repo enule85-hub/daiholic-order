@@ -990,8 +990,8 @@ function onProductSelect() {
     return;
   }
 
-  // 상품 변경 시 수량 1로 초기화
-  document.getElementById('quantity').value = 1;
+  // 상품 변경 시 수량 초기화 (빈칸)
+  document.getElementById('quantity').value = '';
   document.getElementById('quantity').style.borderColor = '';
 
   var qty = parseInt(document.getElementById('quantity').value) || 1;
