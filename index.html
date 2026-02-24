@@ -809,6 +809,7 @@
         <label>품목명 <span class="required">*</span></label>
         <select class="product-select" id="product" onchange="onProductChange()"><option value="">상품 목록을 불러올 수 없습니다</option></select>
         <div id="stockInfo" class="stock-info" style="display:none;"></div>
+        <div id="productDesc" style="display:none;font-size:13px;color:#555;margin-top:6px;padding:8px 12px;background:#F8F8F8;border-radius:8px;line-height:1.6;white-space:pre-wrap;"></div>
         <div class="error-msg" id="productErr">품목명을 선택해 주세요</div>
       </div>
 
@@ -964,6 +965,7 @@ function loadProducts() {
         opt.dataset.shipping = item.shipping;
         opt.dataset.stock  = (item.stock  !== null && item.stock  !== undefined) ? item.stock  : '';
         opt.dataset.bundle = (item.bundle !== null && item.bundle !== undefined) ? item.bundle : '';
+        opt.dataset.desc   = item.desc || '';
         if (isSoldout) {
           opt.disabled = true;
           opt.textContent = '[품절] ' + item.name;
@@ -996,6 +998,7 @@ function onProductChange() {
   document.getElementById('amount').value = '';
   document.getElementById('stockInfo').style.display = 'none';
   document.getElementById('shippingFeeInfo').style.display = 'none';
+  document.getElementById('productDesc').style.display = 'none';
   updateAmount();
   onProductSelect();
 }
@@ -1048,6 +1051,16 @@ function onProductSelect() {
   var stockEl = document.getElementById('stockInfo');
   var stockVal = selectedOpt.dataset.stock;
   var qtyInput = document.getElementById('quantity');
+  // 상품설명 표시
+  var descEl = document.getElementById('productDesc');
+  var descVal = selectedOpt.dataset.desc;
+  if (descVal && descVal.trim() !== '') {
+    descEl.style.display = 'block';
+    descEl.textContent = descVal;
+  } else {
+    descEl.style.display = 'none';
+  }
+
   stockEl.style.display = 'block';
   if (stockVal === '' || stockVal === 'undefined' || stockVal === undefined || stockVal === null) {
     stockEl.className = 'stock-info unlimited';
