@@ -1036,10 +1036,12 @@ function onProductSelect() {
     feeEl.innerHTML = '📦 <span class="free">무료배송</span>';
   } else if (qty > 0 && actualShipping !== shipping) {
     feeEl.style.display = 'block';
-    feeEl.innerHTML = '📦 택배비 <strong>' + actualShipping.toLocaleString('ko-KR') + '원</strong> <span style="color:#DC2626;font-size:11px;">(묶음배송 초과)</span>';
+    var bundleInfoOver = (bundle && bundle !== '' && bundle !== 'undefined') ? ' <span style="color:#7C3AED;font-size:11px;">(' + parseInt(bundle) + '개까지 묶음배송 가능)</span>' : '';
+    feeEl.innerHTML = '📦 택배비 <strong>' + actualShipping.toLocaleString('ko-KR') + '원</strong>' + bundleInfoOver;
   } else {
     feeEl.style.display = 'block';
-    feeEl.innerHTML = '📦 택배비 <strong>' + shipping.toLocaleString('ko-KR') + '원</strong>';
+    var bundleInfo = (bundle && bundle !== '' && bundle !== 'undefined') ? ' <span style="color:#7C3AED;font-size:11px;">(' + parseInt(bundle) + '개까지 묶음배송 가능)</span>' : '';
+    feeEl.innerHTML = '📦 택배비 <strong>' + shipping.toLocaleString('ko-KR') + '원</strong>' + bundleInfo;
   }
 
   // 재고 표시
@@ -1079,9 +1081,11 @@ function onQuantityChange() {
       if (shipping === 0) {
         feeEl.innerHTML = '📦 <span class="free">무료배송</span>';
       } else if (actualShipping !== shipping) {
-        feeEl.innerHTML = '📦 택배비 <strong>' + actualShipping.toLocaleString('ko-KR') + '원</strong> <span style="color:#DC2626;font-size:11px;">(묶음배송 초과)</span>';
+        var bundleInfoOver2 = (bundle && bundle !== '' && bundle !== 'undefined') ? ' <span style="color:#7C3AED;font-size:11px;">(' + parseInt(bundle) + '개까지 묶음배송 가능)</span>' : '';
+        feeEl.innerHTML = '📦 택배비 <strong>' + actualShipping.toLocaleString('ko-KR') + '원</strong>' + bundleInfoOver2;
       } else {
-        feeEl.innerHTML = '📦 택배비 <strong>' + shipping.toLocaleString('ko-KR') + '원</strong>';
+        var bundleInfo2 = (bundle && bundle !== '' && bundle !== 'undefined') ? ' <span style="color:#7C3AED;font-size:11px;">(' + parseInt(bundle) + '개까지 묶음배송 가능)</span>' : '';
+        feeEl.innerHTML = '📦 택배비 <strong>' + shipping.toLocaleString('ko-KR') + '원</strong>' + bundleInfo2;
       }
     } else {
       document.getElementById('amount').value = '';
