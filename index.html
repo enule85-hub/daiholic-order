@@ -1239,13 +1239,15 @@ function updateAmount() {
       var qty = parseInt(document.getElementById('quantity').value) || 1;
       var price = parseInt(selectedOpt.dataset.price) || 0;
       var shipping = parseInt(selectedOpt.dataset.shipping) || 0;
-      var total = (price * qty) + shipping;
-      if (shipping > 0) {
-        shippingInfo.style.display = 'block';
-        shippingInfo.textContent = '🚚 상품금액 ' + (price * qty).toLocaleString('ko-KR') + '원 + 택배비 ' + shipping.toLocaleString('ko-KR') + '원 = 총 ' + total.toLocaleString('ko-KR') + '원';
-      } else {
+      var bundle = selectedOpt.dataset.bundle;
+      var actualShipping = calcShipping(shipping, bundle, qty);
+      var total = (price * qty) + actualShipping;
+      if (shipping === 0) {
         shippingInfo.style.display = 'block';
         shippingInfo.textContent = '🚚 무료배송 · 총 ' + total.toLocaleString('ko-KR') + '원';
+      } else {
+        shippingInfo.style.display = 'block';
+        shippingInfo.textContent = '🚚 상품금액 ' + (price * qty).toLocaleString('ko-KR') + '원 + 택배비 ' + actualShipping.toLocaleString('ko-KR') + '원 = 총 ' + total.toLocaleString('ko-KR') + '원';
       }
     } else {
       shippingInfo.style.display = 'none';
@@ -1488,6 +1490,14 @@ function submitOrder() {
 }
 </script>
 
-
+<script>
+  document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'F12') { e.preventDefault(); return false; }
+    if (e.ctrlKey && (e.key === 'u' || e.key === 'U')) { e.preventDefault(); return false; }
+    if (e.ctrlKey && (e.key === 's' || e.key === 'S')) { e.preventDefault(); return false; }
+    if (e.ctrlKey && e.shiftKey && ['I','i','J','j','C','c'].includes(e.key)) { e.preventDefault(); return false; }
+  });
+</script>
 
 </body></html>
