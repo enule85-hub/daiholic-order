@@ -981,10 +981,38 @@ function onProductSelect() {
   updateAmount();
 }
 
-// ✅ 수량 변경 시에도 금액 재계산
+// ✅ 수량 변경 시 재고 초과 체크 + 금액 재계산
 function onQuantityChange() {
   var select = document.getElementById('product');
-  if (select.value) onProductSelect();
+  var selectedOpt = select.options[select.selectedIndex];
+  var qtyInput = document.getElementById('quantity');
+  var qty = parseInt(qtyInput.value) || 1;
+
+  if (select.value && selectedOpt) {
+    var stock = selectedOpt.dataset.stock;
+    // 재고가 있는 경우(무제한 아닐 때) 수량 제한
+    if (stock !== '' && stock !== null && stock !== undefined) {
+      var maxStock = parseInt(stock);
+      if (qty > maxStock) {
+        qtyInput.value = maxStock;
+        showStockAlert(maxStock);
+      }
+    }
+    onProductSelect();
+  }
+}
+
+function showStockAlert(max) {
+  var el = document.getElementById('stockAlert');
+  if (!el) {
+    el = document.createElement('div');
+    el.id = 'stockAlert';
+    el.style.cssText = 'color:#EF4444;font-size:12px;font-weight:600;margin-top:6px;';
+    document.getElementById('quantity').parentNode.appendChild(el);
+  }
+  el.textContent = '재고가 ' + max + '개 남아있어요. 최대 ' + max + '개까지 주문 가능해요.';
+  clearTimeout(el._t);
+  el._t = setTimeout(function() { el.textContent = ''; }, 3000);
 }
 
 // 페이지 로드 시 실행
@@ -1219,6 +1247,20 @@ function submitOrder() {
   showError('addressErr', !postcode); if (!postcode) valid = false;
   showError('productErr', !product); if (!product) valid = false;
   showError('quantityErr', !quantity); if (!quantity) valid = false;
+  // 재고 초과 체크
+  if (quantity) {
+    var sel = document.getElementById('product');
+    var selOpt = sel.options[sel.selectedIndex];
+    if (selOpt && selOpt.dataset.stock !== '' && selOpt.dataset.stock !== undefined) {
+      var maxSt = parseInt(selOpt.dataset.stock);
+      var qtyNum = parseInt(quantity);
+      if (qtyNum > maxSt) {
+        showError('quantityErr', true);
+        document.getElementById('quantityErr').textContent = '재고(' + maxSt + '개)를 초과했어요';
+        valid = false;
+      }
+    }
+  }
   showError('amountErr', !amount); if (!amount) valid = false;
   // 카드결제 시 최소 1000원 체크
   var amountNum = parseInt(amount) || 0;
