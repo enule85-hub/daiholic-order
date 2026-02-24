@@ -807,7 +807,7 @@
 
       <div class="form-group">
         <label>품목명 <span class="required">*</span></label>
-        <select class="product-select" id="product" onchange="onProductSelect()"><option value="">상품 목록을 불러올 수 없습니다</option></select>
+        <select class="product-select" id="product" onchange="onProductChange()"><option value="">상품 목록을 불러올 수 없습니다</option></select>
         <div id="stockInfo" class="stock-info" style="display:none;"></div>
         <div class="error-msg" id="productErr">품목명을 선택해 주세요</div>
       </div>
@@ -977,6 +977,17 @@ function loadProducts() {
     });
 }
 
+// ✅ 상품 변경 시 수량 초기화 후 onProductSelect 호출
+function onProductChange() {
+  document.getElementById('quantity').value = '';
+  document.getElementById('quantity').style.borderColor = '';
+  document.getElementById('amount').value = '';
+  document.getElementById('stockInfo').style.display = 'none';
+  document.getElementById('shippingFeeInfo').style.display = 'none';
+  updateAmount();
+  onProductSelect();
+}
+
 // ✅ 상품 선택 시 금액 자동 입력
 function onProductSelect() {
   var select = document.getElementById('product');
@@ -990,16 +1001,16 @@ function onProductSelect() {
     return;
   }
 
-  // 상품 변경 시 수량 초기화 (빈칸)
-  document.getElementById('quantity').value = '';
-  document.getElementById('quantity').style.borderColor = '';
-
-  var qty = parseInt(document.getElementById('quantity').value) || 1;
   var price = parseInt(selectedOpt.dataset.price) || 0;
   var shipping = parseInt(selectedOpt.dataset.shipping) || 0;
-  var total = (price * qty) + shipping;
+  var qty = parseInt(document.getElementById('quantity').value) || 0;
 
-  document.getElementById('amount').value = total;
+  // 수량이 입력된 경우에만 금액 계산
+  if (qty > 0) {
+    document.getElementById('amount').value = (price * qty) + shipping;
+  } else {
+    document.getElementById('amount').value = '';
+  }
   updateAmount();
 
   // 택배비 표시
@@ -1032,10 +1043,21 @@ function onProductSelect() {
   }
 }
 
-// ✅ 수량 변경 시에도 금액 재계산
+// ✅ 수량 변경 시 금액 재계산
 function onQuantityChange() {
   var select = document.getElementById('product');
-  if (select.value) onProductSelect();
+  if (select.value) {
+    var selectedOpt = select.options[select.selectedIndex];
+    var price = parseInt(selectedOpt.dataset.price) || 0;
+    var shipping = parseInt(selectedOpt.dataset.shipping) || 0;
+    var qty = parseInt(document.getElementById('quantity').value) || 0;
+    if (qty > 0) {
+      document.getElementById('amount').value = (price * qty) + shipping;
+    } else {
+      document.getElementById('amount').value = '';
+    }
+    updateAmount();
+  }
   checkStockLimit();
 }
 
