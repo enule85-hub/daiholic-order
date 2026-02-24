@@ -1011,16 +1011,20 @@ function onProductSelect() {
   // 재고 표시
   var stockEl = document.getElementById('stockInfo');
   var stockVal = selectedOpt.dataset.stock;
+  var qtyInput = document.getElementById('quantity');
   stockEl.style.display = 'block';
   if (stockVal === '' || stockVal === 'undefined' || stockVal === undefined || stockVal === null) {
     stockEl.className = 'stock-info unlimited';
     stockEl.textContent = '✓ 재고 무제한';
+    qtyInput.removeAttribute('max');
   } else if (Number(stockVal) <= 0) {
     stockEl.className = 'stock-info soldout';
     stockEl.textContent = '✕ 품절';
+    qtyInput.setAttribute('max', '0');
   } else {
     stockEl.className = 'stock-info in-stock';
     stockEl.textContent = '✓ 재고 ' + Number(stockVal) + '개 남음';
+    qtyInput.setAttribute('max', Number(stockVal));
   }
 }
 
@@ -1045,9 +1049,16 @@ function checkStockLimit() {
   var qty = parseInt(quantityEl.value) || 0;
 
   if (qty > stock) {
-    stockEl.className = 'stock-info soldout';
-    stockEl.textContent = '✕ 재고 ' + stock + '개 남음 — 수량을 줄여주세요';
-    quantityEl.style.borderColor = '#DC2626';
+    // 재고 초과 시 자동으로 max값으로 조정
+    quantityEl.value = stock;
+    stockEl.className = 'stock-info in-stock';
+    stockEl.textContent = '✓ 재고 ' + stock + '개 남음';
+    quantityEl.style.borderColor = '';
+    // 금액 재계산
+    var price = parseInt(selectedOpt.dataset.price) || 0;
+    var shipping = parseInt(selectedOpt.dataset.shipping) || 0;
+    document.getElementById('amount').value = (price * stock) + shipping;
+    updateAmount();
   } else {
     stockEl.className = 'stock-info in-stock';
     stockEl.textContent = '✓ 재고 ' + stock + '개 남음';
