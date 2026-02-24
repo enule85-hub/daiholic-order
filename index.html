@@ -962,7 +962,8 @@ function loadProducts() {
         opt.value = item.name;
         opt.dataset.price = item.price;
         opt.dataset.shipping = item.shipping;
-        opt.dataset.stock = (item.stock !== null && item.stock !== undefined) ? item.stock : '';
+        opt.dataset.stock  = (item.stock  !== null && item.stock  !== undefined) ? item.stock  : '';
+        opt.dataset.bundle = (item.bundle !== null && item.bundle !== undefined) ? item.bundle : '';
         if (isSoldout) {
           opt.disabled = true;
           opt.textContent = '[품절] ' + item.name;
@@ -975,6 +976,17 @@ function loadProducts() {
     .catch(function() {
       select.innerHTML = '<option value="">상품 목록을 불러올 수 없습니다</option>';
     });
+}
+
+// 묶음배송 택배비 계산
+function calcShipping(baseShipping, bundle, qty) {
+  if (bundle === '' || bundle === null || bundle === undefined || bundle === 'undefined' || isNaN(parseInt(bundle))) {
+    return baseShipping; // 묶음 설정 없으면 고정 배송비
+  }
+  var b = parseInt(bundle);
+  if (b <= 0) return baseShipping;
+  var boxes = Math.ceil(qty / b); // 박스 수 = 올림(수량/묶음수량)
+  return baseShipping * boxes;
 }
 
 // ✅ 상품 변경 시 수량 초기화 후 onProductSelect 호출
@@ -1005,9 +1017,13 @@ function onProductSelect() {
   var shipping = parseInt(selectedOpt.dataset.shipping) || 0;
   var qty = parseInt(document.getElementById('quantity').value) || 0;
 
+  var bundle = selectedOpt.dataset.bundle;
+  var actualShipping = calcShipping(shipping, bundle, qty > 0 ? qty : 1);
+
   // 수량이 입력된 경우에만 금액 계산
   if (qty > 0) {
-    document.getElementById('amount').value = (price * qty) + shipping;
+    actualShipping = calcShipping(shipping, bundle, qty);
+    document.getElementById('amount').value = (price * qty) + actualShipping;
   } else {
     document.getElementById('amount').value = '';
   }
@@ -1015,12 +1031,15 @@ function onProductSelect() {
 
   // 택배비 표시
   var feeEl = document.getElementById('shippingFeeInfo');
-  if (shipping > 0) {
-    feeEl.style.display = 'block';
-    feeEl.innerHTML = '📦 택배비 <strong>' + shipping.toLocaleString('ko-KR') + '원</strong>';
-  } else {
+  if (shipping === 0) {
     feeEl.style.display = 'block';
     feeEl.innerHTML = '📦 <span class="free">무료배송</span>';
+  } else if (qty > 0 && actualShipping !== shipping) {
+    feeEl.style.display = 'block';
+    feeEl.innerHTML = '📦 택배비 <strong>' + actualShipping.toLocaleString('ko-KR') + '원</strong> <span style="color:#DC2626;font-size:11px;">(묶음배송 초과)</span>';
+  } else {
+    feeEl.style.display = 'block';
+    feeEl.innerHTML = '📦 택배비 <strong>' + shipping.toLocaleString('ko-KR') + '원</strong>';
   }
 
   // 재고 표시
@@ -1050,9 +1069,20 @@ function onQuantityChange() {
     var selectedOpt = select.options[select.selectedIndex];
     var price = parseInt(selectedOpt.dataset.price) || 0;
     var shipping = parseInt(selectedOpt.dataset.shipping) || 0;
-    var qty = parseInt(document.getElementById('quantity').value) || 0;
+    var qty    = parseInt(document.getElementById('quantity').value) || 0;
+    var bundle = selectedOpt.dataset.bundle;
     if (qty > 0) {
-      document.getElementById('amount').value = (price * qty) + shipping;
+      var actualShipping = calcShipping(shipping, bundle, qty);
+      document.getElementById('amount').value = (price * qty) + actualShipping;
+      // 택배비 표시 업데이트
+      var feeEl = document.getElementById('shippingFeeInfo');
+      if (shipping === 0) {
+        feeEl.innerHTML = '📦 <span class="free">무료배송</span>';
+      } else if (actualShipping !== shipping) {
+        feeEl.innerHTML = '📦 택배비 <strong>' + actualShipping.toLocaleString('ko-KR') + '원</strong> <span style="color:#DC2626;font-size:11px;">(묶음배송 초과)</span>';
+      } else {
+        feeEl.innerHTML = '📦 택배비 <strong>' + shipping.toLocaleString('ko-KR') + '원</strong>';
+      }
     } else {
       document.getElementById('amount').value = '';
     }
