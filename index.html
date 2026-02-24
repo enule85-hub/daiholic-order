@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_77.html -->
+<!-- saved from url=(0046)file:///C:/Users/enule/Downloads/index_79.html -->
 <html lang="ko"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -404,6 +404,7 @@
   .receipt-detail.show { display: block; }
 
   /* ─── Product Select ─── */
+  .product-select option:disabled { color: #bbb; }
   .product-select {
     width: 100%;
     padding: 13px 16px;
@@ -833,6 +834,10 @@
 
         <div class="receipt-detail" id="receiptDetail" style="display:none; margin-top:14px;">
           <label>휴대전화 번호 <span class="required">*</span></label>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px; cursor:pointer;" onclick="toggleSamePhone()">
+            <div id="samePhoneCheck" style="width:18px; height:18px; border:2px solid #CCCCCC; border-radius:4px; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:all 0.2s; background:#fff;"></div>
+            <span style="font-size:13px; color:#7A7A7A; font-weight:500;">주문자 정보와 동일</span>
+          </div>
           <input type="tel" id="receiptNumber" placeholder="휴대전화 번호를 입력해 주세요 (숫자만)" maxlength="11" inputmode="numeric" pattern="[0-9]*" oninput="this.value=this.value.replace(/[^0-9]/g,&#39;&#39;)">
           <div class="error-msg" id="receiptNumberErr">휴대전화 번호를 입력해 주세요</div>
         </div>
@@ -936,11 +941,18 @@ function loadProducts() {
       productList = data;
       select.innerHTML = '<option value="">상품을 선택해 주세요</option>';
       data.forEach(function(item) {
+        var isSoldout = (item.stock !== '' && item.stock !== null && item.stock !== undefined && Number(item.stock) <= 0);
         var opt = document.createElement('option');
         opt.value = item.name;
         opt.dataset.price = item.price;
         opt.dataset.shipping = item.shipping;
-        opt.textContent = item.name + ' (' + parseInt(item.price).toLocaleString('ko-KR') + '원)';
+        opt.dataset.stock = (item.stock !== null && item.stock !== undefined) ? item.stock : '';
+        if (isSoldout) {
+          opt.disabled = true;
+          opt.textContent = '[품절] ' + item.name;
+        } else {
+          opt.textContent = item.name + ' (' + parseInt(item.price).toLocaleString('ko-KR') + '원)';
+        }
         select.appendChild(opt);
       });
     })
@@ -1102,6 +1114,33 @@ function updateAmount() {
   } else {
     disp.style.display = 'none';
     shippingInfo.style.display = 'none';
+  }
+}
+
+function toggleSamePhone() {
+  var check = document.getElementById('samePhoneCheck');
+  var input = document.getElementById('receiptNumber');
+  var isChecked = check.dataset.checked === 'true';
+
+  if (!isChecked) {
+    var phone = document.getElementById('phone').value.trim().replace(/-/g, '');
+    check.dataset.checked = 'true';
+    check.style.background = '#111';
+    check.style.borderColor = '#111';
+    check.innerHTML = '<svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4L3.5 6.5L9 1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    input.value = phone;
+    input.readOnly = true;
+    input.style.background = '#F0F0EE';
+    input.style.color = '#7A7A7A';
+  } else {
+    check.dataset.checked = 'false';
+    check.style.background = '#fff';
+    check.style.borderColor = '#CCCCCC';
+    check.innerHTML = '';
+    input.value = '';
+    input.readOnly = false;
+    input.style.background = '';
+    input.style.color = '';
   }
 }
 
