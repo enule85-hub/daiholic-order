@@ -1497,7 +1497,7 @@ function submitOrder() {
   var payload = {
     type: "order",
     payMethod: selectedPay === 'transfer' ? '계좌이체' : '카드결제',
-    name: name, phone: phone,
+    name: name, phone: phone.replace(/-/g, ''),
     address: address1 + (address2 ? ' ' + address2 : '') + ' (' + postcode + ')',
     product: product, quantity: quantity, amount: amount,
     receiptType: selectedReceipt === 'none' ? '필요없음' : selectedReceipt === 'cash' ? '현금영수증' : selectedReceipt === 'expense' ? '사업자지출증빙' : '계산서발행',
