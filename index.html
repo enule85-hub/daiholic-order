@@ -1028,6 +1028,31 @@ function onProductSelect() {
 function onQuantityChange() {
   var select = document.getElementById('product');
   if (select.value) onProductSelect();
+  checkStockLimit();
+}
+
+function checkStockLimit() {
+  var select = document.getElementById('product');
+  var selectedOpt = select.options[select.selectedIndex];
+  var quantityEl = document.getElementById('quantity');
+  var stockEl = document.getElementById('stockInfo');
+  if (!select.value || !selectedOpt) return;
+
+  var stockVal = selectedOpt.dataset.stock;
+  if (stockVal === '' || stockVal === 'undefined' || stockVal === undefined || stockVal === null) return; // 무제한
+
+  var stock = Number(stockVal);
+  var qty = parseInt(quantityEl.value) || 0;
+
+  if (qty > stock) {
+    stockEl.className = 'stock-info soldout';
+    stockEl.textContent = '✕ 재고 ' + stock + '개 남음 — 수량을 줄여주세요';
+    quantityEl.style.borderColor = '#DC2626';
+  } else {
+    stockEl.className = 'stock-info in-stock';
+    stockEl.textContent = '✓ 재고 ' + stock + '개 남음';
+    quantityEl.style.borderColor = '';
+  }
 }
 
 // 페이지 로드 시 실행
@@ -1262,6 +1287,17 @@ function submitOrder() {
   showError('addressErr', !postcode); if (!postcode) valid = false;
   showError('productErr', !product); if (!product) valid = false;
   showError('quantityErr', !quantity); if (!quantity) valid = false;
+
+  // 재고 초과 체크
+  var selOpt = document.getElementById('product').options[document.getElementById('product').selectedIndex];
+  if (selOpt && selOpt.dataset.stock !== '' && selOpt.dataset.stock !== undefined && selOpt.dataset.stock !== 'undefined') {
+    var stockNum = Number(selOpt.dataset.stock);
+    var qtyNum = parseInt(quantity) || 0;
+    if (qtyNum > stockNum) {
+      alert('재고가 부족합니다. 현재 재고: ' + stockNum + '개');
+      valid = false;
+    }
+  }
   showError('amountErr', !amount); if (!amount) valid = false;
   // 카드결제 시 최소 1000원 체크
   var amountNum = parseInt(amount) || 0;
