@@ -633,6 +633,29 @@
 
   .success-box p { font-size: 14px; color: var(--text-sub); line-height: 1.7; }
 
+  .loading-bar-wrap {
+    width: 100%; max-width: 240px;
+    height: 6px;
+    background: #EDE9FE;
+    border-radius: 99px;
+    margin: 20px auto 0;
+    overflow: hidden;
+  }
+  .loading-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #A78BFA, #7C3AED);
+    border-radius: 99px;
+    transition: width 0.3s ease;
+  }
+  .loading-step-text {
+    font-size: 12px;
+    color: #A78BFA;
+    margin-top: 10px;
+    font-weight: 600;
+    min-height: 18px;
+  }
+
   /* ─── Email Domain Select ─── */
   select {
     width: 100%;
@@ -933,6 +956,10 @@
     <div class="icon" id="successIcon">⏳</div>
     <h2 id="successTitle">잠시만 기다려 주십시오</h2>
     <p id="successMsg">주문이 접수되었습니다.<br>카드결제 페이지로 이동중입니다.</p>
+    <div class="loading-bar-wrap" id="loadingBarWrap" style="display:none;">
+      <div class="loading-bar-fill" id="loadingBarFill"></div>
+    </div>
+    <div class="loading-step-text" id="loadingStepText"></div>
   </div>
 
   <div class="footer">
@@ -1317,6 +1344,36 @@ function showError(id, show) {
   document.getElementById(id).style.display = show ? 'block' : 'none';
 }
 
+function startLoadingBar() {
+  var fill = document.getElementById('loadingBarFill');
+  var text = document.getElementById('loadingStepText');
+  var steps = [
+    { pct: 20, msg: '주문 정보 확인 중...' },
+    { pct: 45, msg: '결제 요청 전송 중...' },
+    { pct: 70, msg: '결제 페이지 준비 중...' },
+    { pct: 90, msg: '거의 다 됐어요!' },
+  ];
+  var i = 0;
+  fill.style.width = '5%';
+  text.textContent = steps[0].msg;
+  var timer = setInterval(function() {
+    if (i >= steps.length) { clearInterval(timer); return; }
+    fill.style.width = steps[i].pct + '%';
+    text.textContent = steps[i].msg;
+    i++;
+  }, 800);
+  // 전역으로 저장해서 완료 시 100%로
+  window._loadingTimer = timer;
+  window._loadingFill = fill;
+  window._loadingText = text;
+}
+
+function completeLoadingBar() {
+  if (window._loadingTimer) clearInterval(window._loadingTimer);
+  if (window._loadingFill) window._loadingFill.style.width = '100%';
+  if (window._loadingText) window._loadingText.textContent = '결제 페이지로 이동합니다!';
+}
+
 function showSuccess() {
   document.getElementById('formArea').style.display = 'none';
   document.getElementById('successBox').style.display = 'block';
@@ -1327,6 +1384,9 @@ function showSuccess() {
     document.getElementById('successIcon').style.boxShadow = '0 8px 24px rgba(124,58,237,0.3)';
     document.getElementById('successTitle').textContent = '잠시만 기다려 주십시오';
     document.getElementById('successMsg').innerHTML = '주문이 접수되었습니다.<br>카드결제 페이지로 이동중입니다.';
+    // 로딩바 시작
+    document.getElementById('loadingBarWrap').style.display = 'block';
+    startLoadingBar();
   } else {
     document.getElementById('successIcon').textContent = '✓';
     document.getElementById('successIcon').style.background = 'linear-gradient(135deg, #4ADE80, #16A34A)';
@@ -1474,22 +1534,22 @@ function submitOrder() {
     };
     // 화면 먼저 전환
     showSuccess();
-    // 주문서 저장 + 결제 URL 요청 동시에
-    Promise.all([
-      fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payload) }).catch(function(){}),
-      fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payRequestData) }).then(function(res){ return res.json(); })
-    ])
-    .then(function(results) {
-      var data = results[1];
+    // 결제 URL 먼저 요청 → 성공 시 주문저장 후 이동
+    fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payRequestData) })
+    .then(function(res){ return res.json(); })
+    .then(function(data) {
       if (data.success && data.payUrl) {
-        window.location.href = data.payUrl;
+        // 주문저장은 백그라운드로 (실패해도 결제 진행)
+        fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payload) }).catch(function(){});
+        completeLoadingBar();
+        setTimeout(function() { window.location.href = data.payUrl; }, 400);
       } else {
         alert('결제 요청 실패: ' + (data.message || '다시 시도해 주세요.'));
         btn.disabled = false;
         btn.textContent = '카드 결제 진행';
       }
     })
-    .catch(function() {
+    .catch(function(err) {
       alert('결제 요청 중 오류가 발생했습니다. 다시 시도해 주세요.');
       btn.disabled = false;
       btn.textContent = '카드 결제 진행';
