@@ -1532,16 +1532,16 @@ function submitOrder() {
       recvphone: cardPhone,
       memo: cardName
     };
-    // 화면 먼저 전환
-    showSuccess();
-    // 결제 URL 먼저 요청 → 성공 시 주문저장 후 이동
-    var orderPayload = payload; // ✅ payload 미리 캡처 (카드결제 confirm 이후 스코프 문제 방지)
-    fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payRequestData) })
+    // ✅ 주문저장 먼저 → 완료 후 결제URL 요청 → 이동 (레이스컨디션 방지)
+    var orderPayload = payload;
+    fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(orderPayload) })
+    .then(function() {
+      showSuccess();
+      return fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payRequestData) });
+    })
     .then(function(res){ return res.json(); })
     .then(function(data) {
       if (data.success && data.payUrl) {
-        // 주문저장은 백그라운드로 (실패해도 결제 진행)
-        fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(orderPayload) }).catch(function(){});
         completeLoadingBar();
         setTimeout(function() { window.location.href = data.payUrl; }, 400);
       } else {
