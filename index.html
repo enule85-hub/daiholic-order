@@ -1497,7 +1497,7 @@ function submitOrder() {
   var payload = {
     type: "order",
     payMethod: selectedPay === 'transfer' ? '계좌이체' : '카드결제',
-    name: name, phone: phone.replace(/-/g, ''),
+    name: name, phone: phone,
     address: address1 + (address2 ? ' ' + address2 : '') + ' (' + postcode + ')',
     product: product, quantity: quantity, amount: amount,
     receiptType: selectedReceipt === 'none' ? '필요없음' : selectedReceipt === 'cash' ? '현금영수증' : selectedReceipt === 'expense' ? '사업자지출증빙' : '계산서발행',
@@ -1535,12 +1535,13 @@ function submitOrder() {
     // 화면 먼저 전환
     showSuccess();
     // 결제 URL 먼저 요청 → 성공 시 주문저장 후 이동
+    var orderPayload = payload; // ✅ payload 미리 캡처 (카드결제 confirm 이후 스코프 문제 방지)
     fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payRequestData) })
     .then(function(res){ return res.json(); })
     .then(function(data) {
       if (data.success && data.payUrl) {
         // 주문저장은 백그라운드로 (실패해도 결제 진행)
-        fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(payload) }).catch(function(){});
+        fetch(WEBHOOK_URL, { method: 'POST', body: JSON.stringify(orderPayload) }).catch(function(){});
         completeLoadingBar();
         setTimeout(function() { window.location.href = data.payUrl; }, 400);
       } else {
